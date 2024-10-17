@@ -2,7 +2,7 @@
 
 Track character movement across multiple drags. Works like a more mobile-friendly version of various 'measure along path' plugins.
 
-![Interface](./docs/header.jpg)
+![Interface](./docs/header.png)
 
 ### Dragtool
 - Drag items around (mobile friendly) to create 'drag sequences' of multiple waypoints, which keep track of how far the item has moved in total.
