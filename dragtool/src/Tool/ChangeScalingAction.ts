@@ -14,7 +14,7 @@ import { DragToolMetadata, setToolMetadata } from "./DragToolMetadata";
 
 export default class ChangeScalingAction implements ToolAction {
     private static DISTANCE_SCALING_KEY: keyof DragToolMetadata = 'distanceScaling';
-    private static ICONS = [
+    private static ICONS = [ // Font: Acme
         icon0x,
         icon1x,
         icon2x,
