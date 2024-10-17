@@ -11,8 +11,12 @@ node_modules
 dist
 dist-ssr
 *.local
+.yarn
+.pnp.cjs
+.pnp.loader.mjs
 
 # Editor directories and files
+.vscode
 .vscode/*
 !.vscode/extensions.json
 .idea
