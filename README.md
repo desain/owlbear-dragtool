@@ -6,6 +6,7 @@ Track character movement across multiple drags. Works like a more mobile-friendl
 
 ### Dragtool
 - Drag items around (mobile friendly) to create 'drag sequences' of multiple waypoints, which keep track of how far the item has moved in total.
+- On square grids, items intelligently snap to the center or corners of grid cells while being dragged depending on their size, to make sure the token bounds adjoin grid lines.
 - Sequences for an item disappear if another player moves the item.
 - Sequences for an item disappear if their owning player leaves.
 - Set the scaling of movement to 2x to simulate 5e difficult terrain, or 0x to simulate teleportation.
@@ -51,8 +52,6 @@ To make a production build run:
 - Key to drop a point at current spot?
 - Allow measure on non token
 - Make 'clear' action only show up when there are active segments
-
-Font: Acme
 
 ## License
 
