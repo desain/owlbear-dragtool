@@ -10,8 +10,8 @@ Track character movement across multiple drags. Works like a more mobile-friendl
 - Sequences for an item disappear if their owning player leaves.
 - Set the scaling of movement to 2x to simulate 5e difficult terrain, or 0x to simulate teleportation.
 - Double click outside a sequence to quickly delete it.
-- Emanations become sweeps
-
+- When a lighted object collides with a fog wall, the drag sequence is updated to reflect the collided position after the drag is done.
+- If you also have the [Emanations](https://github.com/desain/owlbear-emanation/tree/main) plugin installed, when you drag a token with an emanation, emanations trace out the path that they cover while the token is moving.
 
 ## Installing
 
