@@ -1,5 +1,5 @@
 import OBR, { buildPath, Item, Math2, Vector2 } from "@owlbear-rodeo/sdk";
-import { Emanation, isEmanation, } from "../../../integration_emanations/Emanation";
+import { Emanation, isEmanation, } from "../../../integration_emanation/Emanation";
 import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "../constants";
 import { ItemApi, withBothItemApis } from "../ItemApi";
 import { isDragMarker } from "./DragMarker";
