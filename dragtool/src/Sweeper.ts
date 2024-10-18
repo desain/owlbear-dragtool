@@ -84,41 +84,40 @@ function getCircleSweep(position: Vector2, radius: number, vector: Vector2): Pat
     const leftPerpendicular = Math2.rotate(radiusSizedVector, { x: 0, y: 0 }, -90);
     const rightPerpendicular = Math2.rotate(radiusSizedVector, { x: 0, y: 0 }, 90);
     return [
-        [Command.MOVE, position.x + leftPerpendicular.x, position.y + leftPerpendicular.y],
-        [Command.LINE, position.x + leftPerpendicular.x + vector.x, position.y + leftPerpendicular.y + vector.y],
-        // Conic appromixation to circle
+        [Command.MOVE, position.x + leftPerpendicular.x, position.y + leftPerpendicular.y], // left point
+        [Command.LINE, position.x + leftPerpendicular.x + vector.x, position.y + leftPerpendicular.y + vector.y], // forward left
         [
             Command.CONIC,
-            position.x + leftPerpendicular.x + vector.x + radiusSizedVector.x,
+            position.x + leftPerpendicular.x + vector.x + radiusSizedVector.x, // control point: forward front left
             position.y + leftPerpendicular.y + vector.y + radiusSizedVector.y,
-            position.x + vector.x + radiusSizedVector.x,
+            position.x + vector.x + radiusSizedVector.x, // forward front middle
             position.y + vector.y + radiusSizedVector.y,
-            Math.PI / 4,
+            Math.SQRT1_2, // sin 45, or 0.7071067690849304?
         ],
         [
             Command.CONIC,
-            position.x + rightPerpendicular.x + vector.x + radiusSizedVector.x,
+            position.x + rightPerpendicular.x + vector.x + radiusSizedVector.x, // control point: forward front right
             position.y + rightPerpendicular.y + vector.y + radiusSizedVector.y,
-            position.x + rightPerpendicular.x + vector.x,
+            position.x + rightPerpendicular.x + vector.x, // forward right
             position.y + rightPerpendicular.y + vector.y,
-            Math.PI / 4,
+            Math.SQRT1_2,
         ],
-        [Command.LINE, position.x + rightPerpendicular.x, position.y + rightPerpendicular.y],
+        [Command.LINE, position.x + rightPerpendicular.x, position.y + rightPerpendicular.y], // right point
         [
             Command.CONIC,
-            position.x + rightPerpendicular.x - radiusSizedVector.x,
+            position.x + rightPerpendicular.x - radiusSizedVector.x, // control point: back right
             position.y + rightPerpendicular.y - radiusSizedVector.y,
-            position.x - radiusSizedVector.x,
+            position.x - radiusSizedVector.x, // back middle
             position.y - radiusSizedVector.y,
-            Math.PI / 4,
+            Math.SQRT1_2,
         ],
         [
             Command.CONIC,
-            position.x + leftPerpendicular.x - radiusSizedVector.x,
+            position.x + leftPerpendicular.x - radiusSizedVector.x, // control point: back left
             position.y + leftPerpendicular.y - radiusSizedVector.y,
-            position.x + leftPerpendicular.x,
+            position.x + leftPerpendicular.x, // left point
             position.y + leftPerpendicular.y,
-            Math.PI / 4,
+            Math.SQRT1_2,
         ],
         [Command.CLOSE],
     ];
