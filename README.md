@@ -12,7 +12,7 @@ Track character movement across multiple drags. Works like a more mobile-friendl
 - Set the scaling of movement to 2x to simulate 5e difficult terrain, or 0x to simulate teleportation.
 - Double click outside a sequence to quickly delete it.
 - When a lighted object collides with a fog wall, the drag sequence is updated to reflect the collided position after the drag is done.
-- If you also have the [Emanations](https://github.com/desain/owlbear-emanation/tree/main) plugin installed, when you drag a token with an emanation, emanations trace out the path that they cover while the token is moving.
+- If you also have the [Auras & Emanations](https://github.com/desain/owlbear-emanation/tree/main) plugin installed, when you drag a token with a simple aura, it will trace out the path that they cover while the token is moving.
 
 ## Installing
 
@@ -52,6 +52,8 @@ To make a production build run:
 - Key to drop a point at current spot?
 - Allow measure on non token
 - Make 'clear' action only show up when there are active segments
+- Fix simple emanations
+- Parameter properties
 
 ## License
 
