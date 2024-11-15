@@ -6,7 +6,7 @@ import {
     PathCommand,
     Vector2,
 } from "@owlbear-rodeo/sdk";
-import { SimpleEmanation } from "../integration_emanation/Emanation";
+import { SimpleAura } from "../integration_emanation/Aura";
 
 // export function circ(centers: Vector2[], position: Vector2 = { x: 0, y: 0 }) {
 //     let redness = 0;
@@ -23,22 +23,22 @@ export type Sweeper = (
     movementVector: Vector2,
 ) => PathCommand[];
 
-export function getSweeper(emanation: SimpleEmanation): Sweeper {
-    if (isCurve(emanation)) {
-        const convex = isConvex(emanation.points);
+export function getSweeper(aura: SimpleAura): Sweeper {
+    if (isCurve(aura)) {
+        const convex = isConvex(aura.points);
         const sweeperFunc = convex
             ? getConvexPolygonSweep
             : getConcavePolygonSweep;
-        const rotatedPoints = emanation.points.map((p) =>
-            Math2.rotate(p, { x: 0, y: 0 }, emanation.rotation),
+        const rotatedPoints = aura.points.map((p) =>
+            Math2.rotate(p, { x: 0, y: 0 }, aura.rotation),
         );
         return (position: Vector2, movementVector: Vector2) =>
             sweeperFunc(position, rotatedPoints, movementVector);
-    } else if (isShape(emanation) && emanation.shapeType === "CIRCLE") {
+    } else if (isShape(aura) && aura.shapeType === "CIRCLE") {
         return (position: Vector2, movementVector: Vector2) =>
-            getCircleSweep(position, emanation.width / 2, movementVector);
+            getCircleSweep(position, aura.width / 2, movementVector);
     } else {
-        throw new Error(`Unknown emanation type`);
+        throw new Error(`Unknown aura type`);
     }
 }
 

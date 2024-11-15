@@ -1,8 +1,5 @@
 import OBR, { buildPath, Item, Math2, Vector2 } from "@owlbear-rodeo/sdk";
-import {
-    isEmanation,
-    SimpleEmanation,
-} from "../../integration_emanation/Emanation";
+import { isAura, SimpleAura } from "../../integration_emanation/Aura";
 import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "../constants";
 import { ItemApi, withBothItemApis } from "../ItemApi";
 import { isDragMarker } from "./DragMarker";
@@ -15,11 +12,11 @@ import {
 import { isSequenceTarget } from "./SequenceTarget";
 import { Sweep } from "./Sweep";
 
-export async function getEmanations(
+export async function getAuras(
     id: string,
     api: ItemApi,
-): Promise<SimpleEmanation[]> {
-    return (await api.getItemAttachments([id])).filter(isEmanation);
+): Promise<SimpleAura[]> {
+    return (await api.getItemAttachments([id])).filter(isAura);
 }
 
 export function itemMovedOutsideItsSequence(
@@ -92,11 +89,11 @@ export async function getSequenceLength(targetId: string, api: ItemApi) {
 
 export function getOrCreateSweep(
     target: Item,
-    emanation: SimpleEmanation,
+    aura: SimpleAura,
     existingSweeps: Sweep[],
 ): Sweep {
     const existingSweep = existingSweeps.find(
-        (sweep) => sweep.metadata[METADATA_KEY].emanationId === emanation.id,
+        (sweep) => sweep.metadata[METADATA_KEY].auraId === aura.id,
     );
     if (existingSweep) {
         return existingSweep;
@@ -105,16 +102,16 @@ export function getOrCreateSweep(
             target,
             "DRAWING",
             null,
-            { emanationId: emanation.id },
+            { auraId: aura.id },
             buildPath()
                 .position({ x: 0, y: 0 })
                 .commands([])
-                .strokeWidth(emanation.style.strokeWidth)
-                .strokeColor(emanation.style.strokeColor)
-                .strokeDash(emanation.style.strokeDash)
+                .strokeWidth(aura.style.strokeWidth)
+                .strokeColor(aura.style.strokeColor)
+                .strokeDash(aura.style.strokeDash)
                 .strokeOpacity(0)
-                .fillColor(emanation.style.fillColor)
-                .fillOpacity(emanation.style.fillOpacity)
+                .fillColor(aura.style.fillColor)
+                .fillOpacity(aura.style.fillOpacity)
                 .fillRule("nonzero"),
         ); // todo how to typecheck this?
         return sweep;
