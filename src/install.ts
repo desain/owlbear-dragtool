@@ -1,7 +1,7 @@
 import OBR, { Item, Player } from "@owlbear-rodeo/sdk";
 import { METADATA_KEY } from "./constants";
 import { ItemApi, withBothItemApis } from "./ItemApi";
-import { isSequenceTarget } from "./Sequence/SequenceTarget";
+import { isSequenceTarget } from "./Sequence/ItemMetadata";
 import { deleteSequence, itemMovedOutsideItsSequence } from "./Sequence/utils";
 import ChangeScalingAction from "./Tool/ChangeScalingAction";
 import CLEAR_ACTION from "./Tool/ClearAction";
@@ -69,12 +69,6 @@ async function deleteSequencesFromVanishedPlayers(players: Player[]) {
     });
 }
 
-function isStationarySequenceTarget(item: Item) {
-    return (
-        isSequenceTarget(item) && !item.metadata[METADATA_KEY].activelyDragging
-    );
-}
-
 /**
  * Delete a sequence when an item moves sout of it.
  * @param items Current set of items
@@ -84,15 +78,16 @@ async function deleteInvalidatedSequences(items: Item[], api: ItemApi) {
     // Remove sequence items whose target was moved
     for (const item of items) {
         if (
-            isStationarySequenceTarget(item) &&
+            isSequenceTarget(item) &&
+            !item.metadata[METADATA_KEY].activelyDragging &&
             itemMovedOutsideItsSequence(item, items)
         ) {
-            console.log(
-                "item moved out of its sequence",
-                item.id,
-                "items are",
-                items,
-            );
+            // console.log(
+            //     "item moved out of its sequence",
+            //     item.id,
+            //     "items are",
+            //     items,
+            // );
             await deleteSequence(item, api);
         }
     }

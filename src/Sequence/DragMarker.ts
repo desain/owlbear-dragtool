@@ -11,12 +11,12 @@ import {
     METADATA_KEY,
     ZIndex,
 } from "../constants";
-import { assertHasMetadata } from "./metadataUtils";
 import {
     SequenceTarget,
     createDraggingSequenceTargetMetadata,
     isSequenceTarget,
-} from "./SequenceTarget";
+} from "./ItemMetadata";
+import { assertHasMetadata } from "./metadataUtils";
 
 type DragMarker = Shape & SequenceTarget;
 

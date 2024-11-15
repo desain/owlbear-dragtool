@@ -6,12 +6,13 @@ import {
 } from "./AbstractInteraction";
 import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "./constants";
 import { createDragMarker } from "./Sequence/DragMarker";
-import { assertHasMetadata } from "./Sequence/metadataUtils";
-import { Segment, createSegment, getSegmentText } from "./Sequence/Segment";
 import {
     SequenceTarget,
     createDraggingSequenceTargetMetadata,
-} from "./Sequence/SequenceTarget";
+    getItemMetadata,
+} from "./Sequence/ItemMetadata";
+import { assertHasMetadata } from "./Sequence/metadataUtils";
+import { Segment, createSegment, getSegmentText } from "./Sequence/Segment";
 import { Sweep, SweepData, getSweeps } from "./Sequence/Sweep";
 import { getSequenceLength } from "./Sequence/utils";
 import { Waypoint, createWaypoint } from "./Sequence/Waypoint";
@@ -30,38 +31,37 @@ type DragInteractionItems = {
     waypointLabel: WaypointLabel;
 };
 
-export default class DragState {
-    private readonly start: Vector2;
-    private readonly sweepData: SweepData[];
-    private readonly interaction: AbstractInteraction<Item[]>;
-    private readonly snapper: Snapper;
-    private readonly distanceScaling: number;
-    /**
-     * Distance the target has traveled before the current drag.
-     */
-    private readonly baseDistance: number;
-    /**
-     * Whether the target was created just for this drag (e.g it's a marker for a measurement).
-     */
-    private readonly targetIsNew: boolean;
+// just for semantics
+type DistanceInGridUnits = number; // eg 1 for 5ft on a 5ft grid
+type DistanceInGridMultiplied = number; // eg 5 for 5ft on a 5ft grid
 
+function gridMultipliedToUnits(
+    gridMultiplied: DistanceInGridMultiplied | null,
+    scale: GridScale,
+): DistanceInGridUnits | null {
+    return gridMultiplied === null
+        ? null
+        : gridMultiplied / scale.parsed.multiplier;
+}
+
+export default class DragState {
     private constructor(
-        start: Vector2,
-        baseDistance: number,
-        distanceScaling: number,
-        interaction: AbstractInteraction<Item[]>,
-        sweepData: SweepData[],
-        snapper: Snapper,
-        targetIsNew: boolean,
-    ) {
-        this.start = start;
-        this.baseDistance = baseDistance;
-        this.distanceScaling = distanceScaling;
-        this.interaction = interaction;
-        this.snapper = snapper;
-        this.targetIsNew = targetIsNew;
-        this.sweepData = sweepData;
-    }
+        private readonly start: Vector2,
+        /**
+         * Distance the target has traveled before the current drag.
+         */
+        private readonly baseDistance: DistanceInGridUnits,
+        private readonly distanceScaling: number,
+        private readonly interaction: AbstractInteraction<Item[]>,
+        private readonly sweepData: SweepData[],
+        private readonly snapper: Snapper,
+        /**
+         * Whether the target was created just for this drag (e.g it's a marker for a measurement).
+         */
+        private readonly targetIsNew: boolean,
+        private readonly movementSpeed: DistanceInGridUnits | null,
+        private readonly dpi: number,
+    ) {}
 
     private static setupOrCreateTarget(
         targetArg: Item | null,
@@ -80,8 +80,10 @@ export default class DragState {
                 privateMode,
             );
         } else {
-            targetArg.metadata[METADATA_KEY] =
-                createDraggingSequenceTargetMetadata();
+            targetArg.metadata[METADATA_KEY] = {
+                ...getItemMetadata(targetArg),
+                ...createDraggingSequenceTargetMetadata(),
+            };
             target = assertHasMetadata(targetArg);
         }
         return { target, targetIsNew };
@@ -102,12 +104,14 @@ export default class DragState {
         privateMode: boolean,
         aboveCharacters: boolean,
     ): Promise<DragState> {
-        const [measurement, gridType, dpi, playerColor] = await Promise.all([
-            OBR.scene.grid.getMeasurement(),
-            OBR.scene.grid.getType(),
-            OBR.scene.grid.getDpi(),
-            OBR.player.getColor(),
-        ]);
+        const [measurement, gridType, dpi, scale, playerColor] =
+            await Promise.all([
+                OBR.scene.grid.getMeasurement(),
+                OBR.scene.grid.getType(),
+                OBR.scene.grid.getDpi(),
+                OBR.scene.grid.getScale(),
+                OBR.player.getColor(),
+            ]);
 
         const snapper = new Snapper(targetArg, measurement, gridType);
         const layer = aboveCharacters ? "RULER" : "DRAWING";
@@ -118,6 +122,10 @@ export default class DragState {
             dpi,
             playerColor,
             privateMode,
+        );
+        const movementSpeed = gridMultipliedToUnits(
+            getItemMetadata(target)?.movementSpeed ?? null,
+            scale,
         );
         const { sweeps, sweepDatas: sweepData } = await getSweeps(target);
         const segment = createSegment(target, end, layer, distanceScaling);
@@ -142,6 +150,8 @@ export default class DragState {
             sweepData,
             snapper,
             targetIsNew,
+            movementSpeed,
+            dpi,
         );
     }
 
@@ -183,7 +193,10 @@ export default class DragState {
         ];
     }
 
-    private async getDistanceAndScale(end: Vector2) {
+    private async getDistanceAndScale(end: Vector2): Promise<{
+        unadjustedDistance: DistanceInGridUnits;
+        scale: GridScale;
+    }> {
         const [unadjustedDistance, scale] = await Promise.all([
             OBR.scene.grid.getDistance(this.start, end),
             OBR.scene.grid.getScale(),
@@ -194,7 +207,8 @@ export default class DragState {
     private updateItems(
         changedEnd: boolean,
         end: Vector2,
-        unadjustedDistance: number,
+        didLimit: boolean,
+        unadjustedDistance: DistanceInGridUnits,
         scale: GridScale,
         { target, sweeps, segment, waypointLabel }: DragInteractionItems,
     ) {
@@ -203,7 +217,7 @@ export default class DragState {
             const totalDistance = this.baseDistance + adjustedDistance;
             waypointLabel.text = {
                 ...waypointLabel.text,
-                plainText: getWaypointLabelText(totalDistance, scale),
+                plainText: getWaypointLabelText(totalDistance, scale, didLimit),
             };
             waypointLabel.position = end;
 
@@ -235,8 +249,38 @@ export default class DragState {
         }
     }
 
+    private async limit(position: Vector2): Promise<[Vector2, boolean]> {
+        if (this.movementSpeed === null) {
+            return [position, false];
+        } else {
+            const speedLeft: DistanceInGridUnits =
+                this.movementSpeed - this.baseDistance;
+            const movementVector = Math2.subtract(position, this.start);
+            const movementVectorLength: DistanceInGridUnits =
+                (await OBR.scene.grid.getDistance(this.start, position)) *
+                this.distanceScaling;
+
+            if (
+                movementVectorLength > speedLeft &&
+                this.distanceScaling !== 0
+            ) {
+                const movementVectorNormalized =
+                    Math2.normalize(movementVector);
+                const limitedMovementVector = Math2.multiply(
+                    movementVectorNormalized,
+                    (speedLeft / this.distanceScaling) * this.dpi,
+                );
+
+                return [Math2.add(this.start, limitedMovementVector), true];
+            } else {
+                return [position, false];
+            }
+        }
+    }
+
     async update(pointerPosition: Vector2) {
-        const [end, changedEnd] = await this.snapper.snap(pointerPosition);
+        const [limitedEnd, didLimit] = await this.limit(pointerPosition);
+        const [end, changedEnd] = await this.snapper.snap(limitedEnd);
         const { unadjustedDistance, scale } = await this.getDistanceAndScale(
             end,
         );
@@ -245,6 +289,7 @@ export default class DragState {
             this.updateItems(
                 changedEnd,
                 end,
+                didLimit,
                 unadjustedDistance,
                 scale,
                 this.decomposeItems(items),
@@ -307,6 +352,7 @@ export default class DragState {
                 this.updateItems(
                     changedEnd,
                     collidedTarget.position,
+                    false, // collision can only make the path shorter
                     unadjustedDistance,
                     scale,
                     dragInteractionItems,

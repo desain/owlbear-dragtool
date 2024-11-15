@@ -22,8 +22,8 @@ export function createWaypointLabel(target: Item): WaypointLabel {
     );
 }
 
-export function getWaypointLabelText(numGridUnits: number, scale: GridScale) {
+export function getWaypointLabelText(numGridUnits: number, scale: GridScale, didLimit: boolean) {
     return `${Math.round(numGridUnits * scale.parsed.multiplier).toString()}${
         scale.parsed.unit
-    }`;
+    }${didLimit ? '*' : ''}`;
 }
