@@ -3,13 +3,17 @@ import { isAura, SimpleAura } from "../../integration_emanation/Aura";
 import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "../constants";
 import { ItemApi, withBothItemApis } from "../ItemApi";
 import { isDragMarker } from "./DragMarker";
+import {
+    DraggableItem,
+    isSequenceTarget,
+    SequenceTarget,
+} from "./ItemMetadata";
 import { isSegment } from "./Segment";
 import {
     buildSequenceItem,
     isSequenceItem,
     SequenceItem,
 } from "./SequenceItem";
-import { isSequenceTarget } from "./SequenceTarget";
 import { Sweep } from "./Sweep";
 
 export async function getAuras(
@@ -38,16 +42,20 @@ export function itemMovedOutsideItsSequence(
     return true;
 }
 
-export async function deleteSequence(target: Item, api: ItemApi) {
+export async function deleteSequence(target: SequenceTarget, api: ItemApi) {
     // console.log('deleting sequence for', target.id);
     const toDelete = (
         await api.getItems(belongsToSequenceForTarget(target.id))
     ).map((item) => item.id);
+
     if (isDragMarker(target)) {
         toDelete.push(target.id);
     } else {
         await api.updateItems([target], ([target]) => {
-            target.metadata[METADATA_KEY] = {};
+            if (isSequenceTarget(target)) {
+                (target as DraggableItem).metadata[METADATA_KEY].hasSequence =
+                    false;
+            }
         });
     }
     await api.deleteItems(toDelete);
