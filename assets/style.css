@@ -1,0 +1,15 @@
+#movement {
+    background: none;
+    display: inline-block;
+    color: inherit;
+    max-width: 50px;
+}
+
+.unit {
+    font-style: italic;
+}
+
+#forget {
+    position: absolute;
+    right: 0;
+}

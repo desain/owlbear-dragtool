@@ -1,5 +1,6 @@
 import OBR, { Item, Player } from "@owlbear-rodeo/sdk";
 import { METADATA_KEY } from "./constants";
+import { createContextMenu } from "./createContextMenu";
 import { ItemApi, withBothItemApis } from "./ItemApi";
 import { isSequenceTarget } from "./Sequence/ItemMetadata";
 import { deleteSequence, itemMovedOutsideItsSequence } from "./Sequence/utils";
@@ -13,6 +14,7 @@ export default async function installDragTool() {
     console.log("Dragtool 0.0.1");
     const changeScalingAction = new ChangeScalingAction();
     await Promise.all([
+        createContextMenu(),
         OBR.tool.create(DRAG_TOOL),
         OBR.tool.createAction(changeScalingAction),
         OBR.tool.createAction(CLEAR_ACTION),
