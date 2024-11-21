@@ -1,4 +1,5 @@
 import OBR, { Item } from "@owlbear-rodeo/sdk";
+import { isObject } from "util";
 import { METADATA_KEY } from "../constants";
 import { ItemWithMetadata } from "./metadataUtils";
 
@@ -7,12 +8,6 @@ interface SequenceTargetMetadata {
     playerId: string;
     activelyDragging: boolean;
 }
-
-export type SequenceTarget = ItemWithMetadata<
-    Item,
-    typeof METADATA_KEY,
-    SequenceTargetMetadata
->;
 
 function isSequenceTargetMetadata(
     metadata: unknown,
@@ -28,6 +23,12 @@ function isSequenceTargetMetadata(
         typeof metadata.activelyDragging === "boolean"
     );
 }
+
+export type SequenceTarget = ItemWithMetadata<
+    Item,
+    typeof METADATA_KEY,
+    SequenceTargetMetadata
+>;
 
 interface PreviousTargetMetadata {
     hasSequence: false;
@@ -47,26 +48,27 @@ function isPreviousTargetMetadata(
 type DraggableItemMetadata = (
     | SequenceTargetMetadata
     | PreviousTargetMetadata
+    | Record<string, never>
 ) & {
     movementSpeed?: number;
 };
+
+function isDraggableItemMetadata(
+    metadata: unknown,
+): metadata is DraggableItemMetadata {
+    return (
+        metadata !== null &&
+        typeof metadata === 'object' &&
+        (!("movementSpeed" in metadata) ||
+            typeof metadata.movementSpeed === "number")
+    );
+}
 
 export type DraggableItem = ItemWithMetadata<
     Item,
     typeof METADATA_KEY,
     DraggableItemMetadata
 >;
-
-function isDraggableItemMetadata(
-    metadata: unknown,
-): metadata is DraggableItemMetadata {
-    return (
-        (isSequenceTargetMetadata(metadata) ||
-            isPreviousTargetMetadata(metadata)) &&
-        (!("movementSpeed" in metadata) ||
-            typeof metadata.movementSpeed === "number")
-    );
-}
 
 export function createDraggingSequenceTargetMetadata(): SequenceTargetMetadata {
     return {
