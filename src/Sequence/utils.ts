@@ -4,10 +4,11 @@ import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "../constants";
 import { ItemApi, withBothItemApis } from "../ItemApi";
 import { isDragMarker } from "./DragMarker";
 import {
-    DraggableItem,
     isSequenceTarget,
     SequenceTarget,
+    SequenceTargetMetadata,
 } from "./ItemMetadata";
+import { ItemWithMetadata } from "./metadataUtils";
 import { isSegment } from "./Segment";
 import {
     buildSequenceItem,
@@ -53,8 +54,14 @@ export async function deleteSequence(target: SequenceTarget, api: ItemApi) {
     } else {
         await api.updateItems([target], ([target]) => {
             if (isSequenceTarget(target)) {
-                (target as DraggableItem).metadata[METADATA_KEY].hasSequence =
-                    false;
+                const targetDeletable = target as ItemWithMetadata<
+                    Item,
+                    typeof METADATA_KEY,
+                    Partial<SequenceTargetMetadata>
+                >;
+                delete targetDeletable.metadata[METADATA_KEY].hasSequence;
+                delete targetDeletable.metadata[METADATA_KEY].playerId;
+                delete targetDeletable.metadata[METADATA_KEY].activelyDragging;
             }
         });
     }
