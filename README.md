@@ -53,6 +53,7 @@ To make a production build run:
 -   Allow measure on non token
 -   Make 'clear' action only show up when there are active segments
 -   Parameter properties
+-   Broadcast something when dragging?
 
 ## License
 
