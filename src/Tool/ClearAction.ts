@@ -1,4 +1,4 @@
-import { ToolAction } from "@owlbear-rodeo/sdk";
+import type { ToolAction } from "@owlbear-rodeo/sdk";
 import clear from "../../assets/clear.svg";
 import { PLUGIN_ID, TOOL_ID } from "../constants";
 import { deleteAllSequencesForCurrentPlayer } from "../Sequence/utils";
@@ -15,7 +15,7 @@ const CLEAR_ACTION: ToolAction = {
             },
         },
     ],
-    async onClick() {
+    onClick: async () => {
         await deleteAllSequencesForCurrentPlayer();
     },
 };

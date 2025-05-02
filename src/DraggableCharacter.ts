@@ -1,4 +1,5 @@
-import { Image, isImage, Item, KeyFilter } from "@owlbear-rodeo/sdk";
+import type { Image, Item, KeyFilter } from "@owlbear-rodeo/sdk";
+import { isImage } from "@owlbear-rodeo/sdk";
 
 type DraggableCharacter = Image & {
     layer: "CHARACTER" | "MOUNT";
@@ -6,7 +7,7 @@ type DraggableCharacter = Image & {
 
 export function isDraggableCharacter(
     target: Item | undefined,
-    requireUnlocked: boolean = true,
+    requireUnlocked = true,
 ): target is DraggableCharacter {
     return (
         target !== undefined &&

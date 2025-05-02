@@ -1,13 +1,18 @@
-import { Item, KeyEvent, ToolContext, ToolEvent } from "@owlbear-rodeo/sdk";
+import type {
+    Item,
+    KeyEvent,
+    ToolContext,
+    ToolEvent,
+} from "@owlbear-rodeo/sdk";
 import DragState from "../DragState";
 import { deleteAllSequencesForCurrentPlayer } from "../Sequence/utils";
 
 export default abstract class BaseDragMode {
-    private readonly readAndClearScalingJustClicked: () => boolean;
+    readonly #readAndClearScalingJustClicked: () => boolean;
     protected dragState: DragState | null;
 
     constructor(readAndClearScalingJustClicked: () => boolean) {
-        this.readAndClearScalingJustClicked = readAndClearScalingJustClicked;
+        this.#readAndClearScalingJustClicked = readAndClearScalingJustClicked;
         this.dragState = null;
     }
 
@@ -26,7 +31,7 @@ export default abstract class BaseDragMode {
     }
 
     async onDeactivate() {
-        if (!this.readAndClearScalingJustClicked()) {
+        if (!this.#readAndClearScalingJustClicked()) {
             await deleteAllSequencesForCurrentPlayer();
         }
     }

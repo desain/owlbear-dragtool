@@ -1,18 +1,20 @@
-import {
-    buildRuler,
+import type {
     GridScale,
-    isRuler,
     Item,
     Layer,
     Ruler,
-    Vector2,
+    Vector2} from "@owlbear-rodeo/sdk";
+import {
+    buildRuler,
+    isRuler
 } from "@owlbear-rodeo/sdk";
 import { METADATA_KEY, ZIndex } from "../constants";
-import { ItemWithMetadata } from "./metadataUtils";
+import type { ItemWithMetadata } from "./metadataUtils";
+import type {
+    SequenceItemMetadata} from "./SequenceItem";
 import {
     buildSequenceItem,
-    isSequenceItem,
-    SequenceItemMetadata,
+    isSequenceItem
 } from "./SequenceItem";
 
 type SegmentMetadata = SequenceItemMetadata & {

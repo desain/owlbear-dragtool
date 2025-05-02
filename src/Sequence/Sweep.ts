@@ -1,15 +1,18 @@
-import OBR, {
-    isPath,
+import type {
     Item,
-    Math2,
     Path,
     PathCommand,
-    Vector2,
+    Vector2} from "@owlbear-rodeo/sdk";
+import OBR, {
+    isPath,
+    Math2
 } from "@owlbear-rodeo/sdk";
 import { METADATA_KEY } from "../constants";
-import { getSweeper, Sweeper } from "../Sweeper";
-import { ItemWithMetadata } from "./metadataUtils";
-import { isSequenceItem, SequenceItemMetadata } from "./SequenceItem";
+import type { Sweeper } from "../Sweeper";
+import { getSweeper } from "../Sweeper";
+import type { ItemWithMetadata } from "./metadataUtils";
+import type { SequenceItemMetadata } from "./SequenceItem";
+import { isSequenceItem } from "./SequenceItem";
 import {
     belongsToSequenceForTarget,
     getAuras,
@@ -38,7 +41,7 @@ export function isSweep(item: Item): item is Sweep {
 /**
  * Type that represents the data needed to sweep a path.
  */
-export type SweepData = {
+export interface SweepData {
     /**
      * Commands from the sweeps for the aura so far.
      */
@@ -48,7 +51,7 @@ export type SweepData = {
      * Aura position offset from target.
      */
     baseOffset: Vector2;
-};
+}
 
 export async function getSweeps(target: Item) {
     const auras = await getAuras(target.id, OBR.scene.local);

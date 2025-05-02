@@ -1,9 +1,10 @@
+import type { Metadata } from "@owlbear-rodeo/sdk";
 import OBR from "@owlbear-rodeo/sdk";
 import { TOOL_ID } from "../constants";
 
-export type DragToolMetadata = {
+export interface DragToolMetadata extends Metadata {
     distanceScaling: number;
-};
+}
 
 export const DEFAULT_METADATA: DragToolMetadata = { distanceScaling: 1 };
 

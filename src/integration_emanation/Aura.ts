@@ -1,5 +1,6 @@
 // TODO factor out to its own package?
-import { Curve, isCurve, isShape, Item, Shape } from "@owlbear-rodeo/sdk";
+import type { Curve, Item, Shape } from "@owlbear-rodeo/sdk";
+import { isCurve, isShape } from "@owlbear-rodeo/sdk";
 
 export type SimpleAura = Curve | (Shape & { shapeType: "CIRCLE" });
 

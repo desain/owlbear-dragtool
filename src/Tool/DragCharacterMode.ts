@@ -1,4 +1,4 @@
-import { ToolContext, ToolEvent, ToolMode } from "@owlbear-rodeo/sdk";
+import type { ToolContext, ToolEvent, ToolMode } from "@owlbear-rodeo/sdk";
 import walk from "../../assets/walk.svg";
 import { DRAG_MODE_ID, TOOL_ID } from "../constants";
 import {
@@ -72,12 +72,13 @@ export default class DragCharacterMode
         );
     }
 
-    async onToolDoubleClick(_: ToolContext, event: ToolEvent) {
+    onToolDoubleClick = async (_: ToolContext, event: ToolEvent) => {
+        void this;
         if (isDraggableCharacter(event.target, false)) {
             return true; // continue default handler
         } else {
             await deleteAllSequencesForCurrentPlayer();
             return false; // prevent default
         }
-    }
+    };
 }

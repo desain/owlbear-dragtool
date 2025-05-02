@@ -1,12 +1,6 @@
-import {
-    Command,
-    isCurve,
-    isShape,
-    Math2,
-    PathCommand,
-    Vector2,
-} from "@owlbear-rodeo/sdk";
-import { SimpleAura } from "../integration_emanation/Aura";
+import type { PathCommand, Vector2 } from "@owlbear-rodeo/sdk";
+import { Command, isCurve, isShape, Math2 } from "@owlbear-rodeo/sdk";
+import type { SimpleAura } from "./integration_emanation/Aura";
 
 // export function circ(centers: Vector2[], position: Vector2 = { x: 0, y: 0 }) {
 //     let redness = 0;
@@ -44,7 +38,9 @@ export function getSweeper(aura: SimpleAura): Sweeper {
 
 function isConvex(points: Vector2[]): boolean {
     const n = points.length;
-    if (n < 3) return true; // A single point or two points are always convex
+    if (n < 3) {
+        return true;
+    } // A single point or two points are always convex
 
     let prevCrossProduct = 0;
     for (let i = 0; i < n; i++) {
