@@ -23,7 +23,7 @@ Eventually on [store page](https://extensions.owlbear.rodeo/owlbear-dragtool).
 
 ## Development
 
-After checkout, run `yarn dlx @yarnpkg/sdks vscode` to set up development in VS Code.
+After checkout, run `pnpm install`.
 
 ## How it Works
 
@@ -33,19 +33,25 @@ The background script `background.ts` communicates with Owlbear Rodeo to create 
 
 ## Building
 
-This project uses [Yarn](https://yarnpkg.com/) as a package manager.
+This project uses [pnpm](https://pnpm.io/) as a package manager.
 
 To install all the dependencies run:
 
-`yarn`
+```
+pnpm install
+```
 
 To run in a development mode run:
 
-`yarn dev`
+```
+pnpm dev
+```
 
 To make a production build run:
 
-`yarn build`
+```
+pnpm build
+```
 
 ## To do
 

@@ -1,7 +1,7 @@
 import type { ToolAction } from "@owlbear-rodeo/sdk";
 import clear from "../../assets/clear.svg";
-import { PLUGIN_ID, TOOL_ID } from "../constants";
-import { deleteAllSequencesForCurrentPlayer } from "../Sequence/utils";
+import { ID_TOOL, PLUGIN_ID } from "../constants";
+import { deleteAllSequencesForCurrentPlayer } from "../sequence/utils";
 
 const CLEAR_ACTION: ToolAction = {
     id: `${PLUGIN_ID} /tool-action-clear`,
@@ -11,7 +11,7 @@ const CLEAR_ACTION: ToolAction = {
             icon: clear,
             label: "Clear Measurements",
             filter: {
-                activeTools: [TOOL_ID],
+                activeTools: [ID_TOOL],
             },
         },
     ],

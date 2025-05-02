@@ -6,25 +6,25 @@ import {
     wrapRealInteraction,
 } from "./AbstractInteraction";
 import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "./constants";
-import { createDragMarker } from "./Sequence/DragMarker";
-import type { SequenceTarget } from "./Sequence/ItemMetadata";
+import { createDragMarker } from "./sequence/DragMarker";
+import type { SequenceTarget } from "./sequence/ItemMetadata";
 import {
     createDraggingSequenceTargetMetadata,
     getItemMetadata,
-} from "./Sequence/ItemMetadata";
-import { assertHasMetadata } from "./Sequence/metadataUtils";
-import type { Segment } from "./Sequence/Segment";
-import { createSegment, getSegmentText } from "./Sequence/Segment";
-import type { Sweep, SweepData } from "./Sequence/Sweep";
-import { getSweeps } from "./Sequence/Sweep";
-import { getSequenceLength } from "./Sequence/utils";
-import type { Waypoint } from "./Sequence/Waypoint";
-import { createWaypoint } from "./Sequence/Waypoint";
-import type { WaypointLabel } from "./Sequence/WaypointLabel";
+} from "./sequence/ItemMetadata";
+import { assertHasMetadata } from "./sequence/metadataUtils";
+import type { Segment } from "./sequence/Segment";
+import { createSegment, getSegmentText } from "./sequence/Segment";
+import type { Sweep, SweepData } from "./sequence/Sweep";
+import { getSweeps } from "./sequence/Sweep";
+import { getSequenceLength } from "./sequence/utils";
+import type { Waypoint } from "./sequence/Waypoint";
+import { createWaypoint } from "./sequence/Waypoint";
+import type { WaypointLabel } from "./sequence/WaypointLabel";
 import {
     createWaypointLabel,
     getWaypointLabelText,
-} from "./Sequence/WaypointLabel";
+} from "./sequence/WaypointLabel";
 import Snapper from "./Snapper";
 
 interface DragInteractionItems {

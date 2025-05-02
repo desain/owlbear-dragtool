@@ -1,10 +1,16 @@
 export const PLUGIN_ID = "com.desain.dragtool";
-export const TOOL_ID = `${PLUGIN_ID}/tool`;
-export const DRAG_MODE_ID = `${PLUGIN_ID}/mode-drag-item`;
-export const METADATA_KEY = `${PLUGIN_ID}/metadata`;
-export const TRACK_MOVEMENT_ID = `${PLUGIN_ID}/menu-track`;
-export const EDIT_MOVEMENT_ID = `${PLUGIN_ID}/menu-edit`;
 
+// Storage
+export const LOCAL_STORAGE_STORE_NAME = `${PLUGIN_ID}/localStorage`;
+
+// Tool
+export const ID_TOOL = `${PLUGIN_ID}/tool`;
+export const ID_TOOL_MODE_DRAG = `${PLUGIN_ID}/toolModeDrag`;
+export const METADATA_KEY = `${PLUGIN_ID}/metadata`;
+export const ID_CONTEXTMENU_TRACK = `${PLUGIN_ID}/menu-track`;
+export const ID_CONTEXTMENU_EDIT = `${PLUGIN_ID}/menu-edit`;
+
+// UI elements
 export const ZIndex = {
     RULER: 0,
     WAYPOINT: 1,
