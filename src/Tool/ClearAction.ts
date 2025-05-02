@@ -3,7 +3,7 @@ import clear from "../../assets/clear.svg";
 import { ID_TOOL, PLUGIN_ID } from "../constants";
 import { deleteAllSequencesForCurrentPlayer } from "../sequence/utils";
 
-const CLEAR_ACTION: ToolAction = {
+export const CLEAR_ACTION: ToolAction = {
     id: `${PLUGIN_ID} /tool-action-clear`,
     shortcut: "Enter",
     icons: [
@@ -19,5 +19,3 @@ const CLEAR_ACTION: ToolAction = {
         await deleteAllSequencesForCurrentPlayer();
     },
 };
-
-export default CLEAR_ACTION;

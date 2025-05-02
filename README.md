@@ -31,6 +31,8 @@ This project is a simple Typescript app.
 
 The background script `background.ts` communicates with Owlbear Rodeo to create a new tool.
 
+Icons from https://game-icons.net/
+
 ## Building
 
 This project uses [pnpm](https://pnpm.io/) as a package manager.
@@ -55,11 +57,13 @@ pnpm build
 
 ## To do
 
--   Key to drop a point at current spot?
 -   Allow measure on non token
 -   Make 'clear' action only show up when there are active segments
 -   Parameter properties
 -   Broadcast something when dragging?
+-   Faster segment dropping
+-   Path editing?
+-   Configurable shortcuts?
 
 ## License
 

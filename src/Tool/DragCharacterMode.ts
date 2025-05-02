@@ -10,10 +10,7 @@ import DragState from "../DragState";
 import { deleteAllSequencesForCurrentPlayer } from "../sequence/utils";
 import BaseDragMode from "./BaseDragMode";
 
-export default class DragCharacterMode
-    extends BaseDragMode
-    implements ToolMode
-{
+export class DragCharacterMode extends BaseDragMode implements ToolMode {
     id = ID_TOOL_MODE_DRAG;
 
     shortcut = "G";

@@ -1,5 +1,7 @@
 import js from "@eslint/js";
 import preferArrowFunctions from "eslint-plugin-prefer-arrow-functions";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -21,9 +23,18 @@ export default tseslint.config(
             },
         },
         plugins: {
+            "react-hooks": reactHooks,
+            "react-refresh": reactRefresh,
             "prefer-arrow-functions": preferArrowFunctions,
         },
         rules: {
+            ...reactHooks.configs.recommended.rules,
+
+            "react-refresh/only-export-components": [
+                "warn",
+                { allowConstantExport: true },
+            ],
+
             "@typescript-eslint/switch-exhaustiveness-check": "error",
             "@typescript-eslint/no-misused-promises": [
                 "error",
