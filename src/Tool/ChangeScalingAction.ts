@@ -9,7 +9,7 @@ import icon6x from "../../assets/6x.svg";
 import icon7x from "../../assets/7x.svg";
 import icon8x from "../../assets/8x.svg";
 import icon9x from "../../assets/9x.svg";
-import { PLUGIN_ID, TOOL_ID } from "../constants";
+import { ID_TOOL, PLUGIN_ID } from "../constants";
 import type { DragToolMetadata } from "./DragToolMetadata";
 import { setToolMetadata } from "./DragToolMetadata";
 
@@ -50,7 +50,7 @@ export default class ChangeScalingAction implements ToolAction {
         icon,
         label: `Change Scaling to ${ChangeScalingAction.nextScale(index)}x`,
         filter: {
-            activeTools: [TOOL_ID],
+            activeTools: [ID_TOOL],
             metadata: [
                 {
                     key: ChangeScalingAction.#DISTANCE_SCALING_KEY,

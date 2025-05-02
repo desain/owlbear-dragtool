@@ -7,11 +7,11 @@ import type {
 } from "@owlbear-rodeo/sdk";
 import ruler from "../../assets/ruler.svg";
 import rulerPrivate from "../../assets/rulerPrivate.svg";
-import { PLUGIN_ID, TOOL_ID } from "../constants";
+import { ID_TOOL, PLUGIN_ID } from "../constants";
 import { isDraggableCharacter } from "../DraggableCharacter";
 import DragState from "../DragState";
-import { DRAG_MARKER_FILTER, isDragMarker } from "../Sequence/DragMarker";
-import { deleteAllSequencesForCurrentPlayer } from "../Sequence/utils";
+import { DRAG_MARKER_FILTER, isDragMarker } from "../sequence/DragMarker";
+import { deleteAllSequencesForCurrentPlayer } from "../sequence/utils";
 import BaseDragMode from "./BaseDragMode";
 
 export default class MeasureMode extends BaseDragMode implements ToolMode {
@@ -43,7 +43,7 @@ export default class MeasureMode extends BaseDragMode implements ToolMode {
                 icon: this.#privateMode ? rulerPrivate : ruler,
                 label: `Measure Path${this.#privateMode ? " (Private)" : ""} `,
                 filter: {
-                    activeTools: [TOOL_ID],
+                    activeTools: [ID_TOOL],
                 },
             },
         ];

@@ -18,7 +18,7 @@ export default defineConfig({
                 ),
                 contextMenuEmbed: resolve(
                     __dirname,
-                    "/src/contextMenuEmbed/contextMenuEmbed.html",
+                    "/src/contextmenu/contextMenuEmbed.html",
                 ),
             },
         },

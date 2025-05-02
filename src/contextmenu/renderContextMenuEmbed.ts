@@ -1,7 +1,7 @@
 import OBR from "@owlbear-rodeo/sdk";
 import "../../assets/style.css";
-import type { DraggableItem } from "../Sequence/ItemMetadata";
 import { METADATA_KEY } from "../constants";
+import type { DraggableItem } from "../sequence/ItemMetadata";
 
 OBR.onReady(renderContextMenu);
 
@@ -37,9 +37,13 @@ async function renderContextMenu() {
             );
         });
 
-    document.getElementById("forget")!.addEventListener("click", async () => await OBR.scene.items.updateItems(items, (items) =>
-            items.forEach((item: DraggableItem) => {
-                item.metadata[METADATA_KEY].movementSpeed = undefined;
-            }),
-        ));
+    document.getElementById("forget")!.addEventListener(
+        "click",
+        async () =>
+            await OBR.scene.items.updateItems(items, (items) =>
+                items.forEach((item: DraggableItem) => {
+                    item.metadata[METADATA_KEY].movementSpeed = undefined;
+                }),
+            ),
+    );
 }

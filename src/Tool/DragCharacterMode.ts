@@ -1,20 +1,20 @@
 import type { ToolContext, ToolEvent, ToolMode } from "@owlbear-rodeo/sdk";
 import walk from "../../assets/walk.svg";
-import { DRAG_MODE_ID, TOOL_ID } from "../constants";
+import { ID_TOOL, ID_TOOL_MODE_DRAG } from "../constants";
 import {
     DRAGGABLE_CHARACTER_FILTER,
     DRAGGABLE_CHARACTER_FILTER_INVERSE,
     isDraggableCharacter,
 } from "../DraggableCharacter";
 import DragState from "../DragState";
-import { deleteAllSequencesForCurrentPlayer } from "../Sequence/utils";
+import { deleteAllSequencesForCurrentPlayer } from "../sequence/utils";
 import BaseDragMode from "./BaseDragMode";
 
 export default class DragCharacterMode
     extends BaseDragMode
     implements ToolMode
 {
-    id = DRAG_MODE_ID;
+    id = ID_TOOL_MODE_DRAG;
 
     shortcut = "G";
 
@@ -23,7 +23,7 @@ export default class DragCharacterMode
             icon: walk,
             label: "Move Character",
             filter: {
-                activeTools: [TOOL_ID /*'rodeo.owlbear.tool/move'*/],
+                activeTools: [ID_TOOL /*'rodeo.owlbear.tool/move'*/],
             },
         },
     ];

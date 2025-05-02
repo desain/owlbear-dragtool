@@ -5,7 +5,7 @@ import type {
     ToolEvent,
 } from "@owlbear-rodeo/sdk";
 import DragState from "../DragState";
-import { deleteAllSequencesForCurrentPlayer } from "../Sequence/utils";
+import { deleteAllSequencesForCurrentPlayer } from "../sequence/utils";
 
 export default abstract class BaseDragMode {
     readonly #readAndClearScalingJustClicked: () => boolean;
