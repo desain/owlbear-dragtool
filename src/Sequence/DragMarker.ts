@@ -1,4 +1,5 @@
 import {
+    GridType,
     Item,
     KeyFilter,
     Shape,
@@ -6,9 +7,11 @@ import {
     buildShape,
     isShape,
 } from "@owlbear-rodeo/sdk";
+import { getScale } from "../axonometricUtils";
 import {
     MARKER_STROKE_WIDTH_DPI_SCALING,
     METADATA_KEY,
+    THIN_RULER_COLOR,
     ZIndex,
 } from "../constants";
 import {
@@ -23,20 +26,23 @@ type DragMarker = Shape & SequenceTarget;
 export function createDragMarker(
     position: Vector2,
     dpi: number,
+    gridType: GridType,
     playerColor: string,
     privateMode: boolean,
 ): DragMarker {
+    const diameter = dpi / 2;
+    const scale = getScale(gridType);
     const shape = buildShape()
         .name("Measurement Marker")
         .shapeType("CIRCLE")
         .position(position)
         .disableAutoZIndex(true)
         .zIndex(ZIndex.MARKER)
-        .width(dpi / 2)
-        .height(dpi / 2)
+        .width(diameter * scale.x)
+        .height(diameter * scale.y)
         .fillColor(playerColor)
         .fillOpacity(1)
-        .strokeColor("gray")
+        .strokeColor(THIN_RULER_COLOR)
         .strokeOpacity(1)
         .strokeDash(privateMode ? [30, 10] : [])
         .strokeWidth(dpi * MARKER_STROKE_WIDTH_DPI_SCALING)
@@ -53,5 +59,5 @@ export function isDragMarker(target: Item | undefined): target is DragMarker {
 
 export const DRAG_MARKER_FILTER: KeyFilter[] = [
     { key: "type", value: "SHAPE", coordinator: "&&" },
-    { key: ["metadata", METADATA_KEY, "type"], value: "SEQUENCE_TARGET" },
+    { key: ["metadata", METADATA_KEY, "hasSequence"], value: true },
 ];

@@ -32,9 +32,10 @@ export async function createContextMenu() {
         ],
         async onClick(context) {
             return await OBR.scene.items.updateItems(context.items, (items) =>
-                items.forEach((item: DraggableItem) => {
-                    item.metadata[METADATA_KEY] = {
-                        ...item.metadata[METADATA_KEY],
+                items.forEach((item) => {
+                    const draggableItem = item as DraggableItem;
+                    draggableItem.metadata[METADATA_KEY] = {
+                        ...draggableItem.metadata[METADATA_KEY],
                         movementSpeed: 30,
                     };
                 }),

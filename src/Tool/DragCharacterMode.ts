@@ -74,10 +74,10 @@ export default class DragCharacterMode
 
     async onToolDoubleClick(_: ToolContext, event: ToolEvent) {
         if (isDraggableCharacter(event.target, false)) {
-            return true;
+            return true; // continue default handler
         } else {
             await deleteAllSequencesForCurrentPlayer();
-            return false;
+            return false; // prevent default
         }
     }
 }

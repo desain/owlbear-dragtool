@@ -15,3 +15,5 @@ export enum ZIndex {
 export const MARKER_STROKE_WIDTH_DPI_SCALING = 1 / 20;
 
 export const VECTOR2_COMPARE_EPSILON = 0.01;
+
+export const THIN_RULER_COLOR = "#6F738F"; // OBR thin rulers color
