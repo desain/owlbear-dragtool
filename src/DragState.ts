@@ -138,7 +138,13 @@ export default class DragState {
         );
         const { sweeps, sweepDatas: sweepData } = await getSweeps(target);
         const segment = createSegment(target, end, layer, distanceScaling);
-        const waypoint = createWaypoint(target, layer, dpi, gridType, playerColor);
+        const waypoint = createWaypoint(
+            target,
+            layer,
+            dpi,
+            gridType,
+            playerColor,
+        );
         const waypointLabel = createWaypointLabel(target);
         const interactionItems = DragState.composeItems({
             target,
@@ -308,13 +314,15 @@ export default class DragState {
         return { ...this.decomposeItems(items), end };
     }
 
-    async finish(pointerPosition: Vector2) {
-        const { target, segment, waypointLabel, sweeps, waypoint, end } =
-            await this.update(pointerPosition);
-
-        if (this.start.x === end.x && this.start.y === end.y) {
-            return await this.cancel();
-        }
+    async finish(pointerPosition?: Vector2): Promise<Item> {
+        const { target, segment, waypointLabel, sweeps, waypoint } =
+            pointerPosition !== undefined
+                ? await this.update(pointerPosition)
+                : {
+                      ...this.decomposeItems(
+                          await this.interaction.update(() => {}),
+                      ),
+                  };
 
         const { keepAndStop, itemApi } = this.interaction;
 
@@ -373,6 +381,7 @@ export default class DragState {
                 ].activelyDragging = false;
             },
         );
+        return collidedTarget;
     }
 
     async cancel() {

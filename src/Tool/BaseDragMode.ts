@@ -1,4 +1,4 @@
-import { ToolContext, ToolEvent } from "@owlbear-rodeo/sdk";
+import { Item, KeyEvent, ToolContext, ToolEvent } from "@owlbear-rodeo/sdk";
 import DragState from "../DragState";
 import { deleteAllSequencesForCurrentPlayer } from "../Sequence/utils";
 
@@ -28,6 +28,24 @@ export default abstract class BaseDragMode {
     async onDeactivate() {
         if (!this.readAndClearScalingJustClicked()) {
             await deleteAllSequencesForCurrentPlayer();
+        }
+    }
+
+    async onKeyDown(context: ToolContext, event: KeyEvent) {
+        if (
+            event.code === "KeyZ" &&
+            !event.repeat &&
+            this.dragState !== null &&
+            typeof context.metadata.distanceScaling === "number"
+        ) {
+            const target: Item = await this.dragState.finish();
+            this.dragState = await DragState.createDrag(
+                target,
+                target.position,
+                context.metadata.distanceScaling,
+                false,
+                false,
+            );
         }
     }
 }
