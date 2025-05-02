@@ -1,4 +1,10 @@
-import OBR, { GridScale, Item, Math2, Vector2 } from "@owlbear-rodeo/sdk";
+import OBR, {
+    GridScale,
+    GridType,
+    Item,
+    Math2,
+    Vector2,
+} from "@owlbear-rodeo/sdk";
 import {
     AbstractInteraction,
     createLocalInteraction,
@@ -67,6 +73,7 @@ export default class DragState {
         targetArg: Item | null,
         positionForNew: Vector2,
         dpi: number,
+        gridType: GridType,
         playerColor: string,
         privateMode: boolean,
     ): { target: SequenceTarget; targetIsNew: boolean } {
@@ -76,6 +83,7 @@ export default class DragState {
             target = createDragMarker(
                 positionForNew,
                 dpi,
+                gridType,
                 playerColor,
                 privateMode,
             );
@@ -104,7 +112,7 @@ export default class DragState {
         privateMode: boolean,
         aboveCharacters: boolean,
     ): Promise<DragState> {
-        const [measurement, gridType, dpi, scale, playerColor] =
+        const [measurement, gridType, dpi, gridScale, playerColor] =
             await Promise.all([
                 OBR.scene.grid.getMeasurement(),
                 OBR.scene.grid.getType(),
@@ -120,16 +128,17 @@ export default class DragState {
             targetArg,
             end,
             dpi,
+            gridType,
             playerColor,
             privateMode,
         );
         const movementSpeed = gridMultipliedToUnits(
             getItemMetadata(target)?.movementSpeed ?? null,
-            scale,
+            gridScale,
         );
         const { sweeps, sweepDatas: sweepData } = await getSweeps(target);
         const segment = createSegment(target, end, layer, distanceScaling);
-        const waypoint = createWaypoint(target, layer, dpi, playerColor);
+        const waypoint = createWaypoint(target, layer, dpi, gridType, playerColor);
         const waypointLabel = createWaypointLabel(target);
         const interactionItems = DragState.composeItems({
             target,

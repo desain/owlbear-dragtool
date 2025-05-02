@@ -1,8 +1,11 @@
-import { Item, Layer, Shape, buildShape } from "@owlbear-rodeo/sdk";
-import { MARKER_STROKE_WIDTH_DPI_SCALING, ZIndex } from "../constants";
+import { GridType, Item, Layer, Shape, buildShape } from "@owlbear-rodeo/sdk";
+import { getScale } from "../axonometricUtils";
+import {
+    MARKER_STROKE_WIDTH_DPI_SCALING,
+    THIN_RULER_COLOR,
+    ZIndex,
+} from "../constants";
 import { SequenceItem, buildSequenceItem } from "./SequenceItem";
-
-const WAYPOINT_STROKE = "#6F738F"; // same color as OBR thin rulers
 
 export type Waypoint = Shape & SequenceItem;
 
@@ -10,8 +13,11 @@ export function createWaypoint(
     target: Item,
     layer: Layer,
     dpi: number,
+    gridType: GridType,
     color: string,
 ): Waypoint {
+    const diameter = dpi / 4;
+    const scale = getScale(gridType);
     return buildSequenceItem(
         target,
         layer,
@@ -21,10 +27,10 @@ export function createWaypoint(
             .name(`Path Waypoint for ${target.name}`)
             .position(target.position)
             .shapeType("CIRCLE")
-            .width(dpi / 4)
-            .height(dpi / 4)
+            .width(diameter * scale.x)
+            .height(diameter * scale.y)
             .fillColor(color)
-            .strokeColor(WAYPOINT_STROKE)
+            .strokeColor(THIN_RULER_COLOR)
             .strokeWidth(dpi * MARKER_STROKE_WIDTH_DPI_SCALING),
     );
 }
