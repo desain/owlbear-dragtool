@@ -33,12 +33,26 @@ export function startSyncing(): [
     );
     const unsubscribeGrid = OBR.scene.grid.onChange(store.setGrid);
 
+    function handleStorageEvent(e: StorageEvent) {
+        if (e.key === usePlayerStorage.persist.getOptions().name) {
+            return usePlayerStorage.persist.rehydrate();
+        }
+    }
+    window.addEventListener("storage", handleStorageEvent);
+    const uninstallStorageHandler = () =>
+        window.removeEventListener("storage", handleStorageEvent);
+
     return [
         Promise.all([
             sceneReadyInitialized,
             playerColorInitialized,
             gridInitialized,
         ]).then(() => void 0),
-        deferCallAll(unsubscribeSceneReady, unsubscribePlayer, unsubscribeGrid),
+        deferCallAll(
+            unsubscribeSceneReady,
+            unsubscribePlayer,
+            unsubscribeGrid,
+            uninstallStorageHandler,
+        ),
     ];
 }

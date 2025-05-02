@@ -13,7 +13,7 @@ import { ID_TOOL, PLUGIN_ID } from "../constants";
 import type { DragToolMetadata } from "./DragToolMetadata";
 import { setToolMetadata } from "./DragToolMetadata";
 
-export default class ChangeScalingAction implements ToolAction {
+export class ChangeScalingAction implements ToolAction {
     static readonly #DISTANCE_SCALING_KEY: string & keyof DragToolMetadata =
         "distanceScaling";
     static readonly #ICONS = [
