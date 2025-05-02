@@ -61,7 +61,7 @@ export async function createContextMenu() {
             },
         ],
         embed: {
-            url: "/contextmenu.html",
+            url: "/src/contextMenuEmbed/contextMenuEmbed.html",
             height: 30,
         },
     });

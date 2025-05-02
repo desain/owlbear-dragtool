@@ -1,14 +1,14 @@
 import OBR, { Item, Player } from "@owlbear-rodeo/sdk";
-import { METADATA_KEY } from "./constants";
-import { createContextMenu } from "./createContextMenu";
-import { ItemApi, withBothItemApis } from "./ItemApi";
-import { isSequenceTarget } from "./Sequence/ItemMetadata";
-import { deleteSequence, itemMovedOutsideItsSequence } from "./Sequence/utils";
-import ChangeScalingAction from "./Tool/ChangeScalingAction";
-import CLEAR_ACTION from "./Tool/ClearAction";
-import DragCharacterMode from "./Tool/DragCharacterMode";
-import DRAG_TOOL from "./Tool/DragTool";
-import MeasureMode from "./Tool/MeasureMode";
+import { METADATA_KEY } from "../constants";
+import { createContextMenu } from "../createContextMenu";
+import { ItemApi, withBothItemApis } from "../ItemApi";
+import { isSequenceTarget } from "../Sequence/ItemMetadata";
+import { deleteSequence, itemMovedOutsideItsSequence } from "../Sequence/utils";
+import ChangeScalingAction from "../Tool/ChangeScalingAction";
+import CLEAR_ACTION from "../Tool/ClearAction";
+import DragCharacterMode from "../Tool/DragCharacterMode";
+import DRAG_TOOL from "../Tool/DragTool";
+import MeasureMode from "../Tool/MeasureMode";
 
 export default async function installDragTool() {
     console.log("Dragtool 0.0.1");
