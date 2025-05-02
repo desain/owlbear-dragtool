@@ -6,5 +6,6 @@
   "author": "desain",
   "homepage_url": "https://github.com/desain/owlbear-dragtool",
   "icon": "/logo.png",
-  "background_url": "/background.html"
+  "background_url": "/background.html",
+  "permissions": []
 }
