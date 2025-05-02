@@ -1,4 +1,4 @@
-import { GridType, Vector2 } from "@owlbear-rodeo/sdk";
+import type { GridType, Vector2 } from "@owlbear-rodeo/sdk";
 
 const PI_6 = Math.PI / 6;
 function degToRad(deg: number): number {

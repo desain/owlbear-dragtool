@@ -1,6 +1,8 @@
-import { buildLabel, GridScale, Item, Label } from "@owlbear-rodeo/sdk";
+import type { GridScale, Item, Label } from "@owlbear-rodeo/sdk";
+import { buildLabel } from "@owlbear-rodeo/sdk";
 import { ZIndex } from "../constants";
-import { buildSequenceItem, SequenceItem } from "./SequenceItem";
+import type { SequenceItem } from "./SequenceItem";
+import { buildSequenceItem } from "./SequenceItem";
 
 export type WaypointLabel = Label & SequenceItem;
 

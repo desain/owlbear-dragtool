@@ -1,6 +1,7 @@
-import OBR, { Item, ItemFilter } from "@owlbear-rodeo/sdk";
+import type { Item, ItemFilter } from "@owlbear-rodeo/sdk";
+import OBR from "@owlbear-rodeo/sdk";
 
-export type ItemApi = {
+export interface ItemApi {
     updateItems(
         items: ItemFilter<Item> | Item[],
         updater: (draft: Item[]) => void,
@@ -12,7 +13,7 @@ export type ItemApi = {
     ): Promise<ItemType[]>;
     onChange(callback: (items: Item[]) => void): () => void;
     getItemAttachments(ids: string[]): Promise<Item[]>;
-};
+}
 
 export async function withBothItemApis(f: (api: ItemApi) => Promise<void>) {
     await Promise.all([f(OBR.scene.items), f(OBR.scene.local)]);

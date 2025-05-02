@@ -1,41 +1,39 @@
-import OBR, {
-    GridScale,
-    GridType,
-    Item,
-    Math2,
-    Vector2,
-} from "@owlbear-rodeo/sdk";
+import type { GridScale, GridType, Item, Vector2 } from "@owlbear-rodeo/sdk";
+import OBR, { Math2 } from "@owlbear-rodeo/sdk";
+import type { AbstractInteraction } from "./AbstractInteraction";
 import {
-    AbstractInteraction,
     createLocalInteraction,
     wrapRealInteraction,
 } from "./AbstractInteraction";
 import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "./constants";
 import { createDragMarker } from "./Sequence/DragMarker";
+import type { SequenceTarget } from "./Sequence/ItemMetadata";
 import {
-    SequenceTarget,
     createDraggingSequenceTargetMetadata,
     getItemMetadata,
 } from "./Sequence/ItemMetadata";
 import { assertHasMetadata } from "./Sequence/metadataUtils";
-import { Segment, createSegment, getSegmentText } from "./Sequence/Segment";
-import { Sweep, SweepData, getSweeps } from "./Sequence/Sweep";
+import type { Segment } from "./Sequence/Segment";
+import { createSegment, getSegmentText } from "./Sequence/Segment";
+import type { Sweep, SweepData } from "./Sequence/Sweep";
+import { getSweeps } from "./Sequence/Sweep";
 import { getSequenceLength } from "./Sequence/utils";
-import { Waypoint, createWaypoint } from "./Sequence/Waypoint";
+import type { Waypoint } from "./Sequence/Waypoint";
+import { createWaypoint } from "./Sequence/Waypoint";
+import type { WaypointLabel } from "./Sequence/WaypointLabel";
 import {
-    WaypointLabel,
     createWaypointLabel,
     getWaypointLabelText,
 } from "./Sequence/WaypointLabel";
 import Snapper from "./Snapper";
 
-type DragInteractionItems = {
+interface DragInteractionItems {
     target: SequenceTarget;
     sweeps: Sweep[];
     segment: Segment;
     waypoint: Waypoint;
     waypointLabel: WaypointLabel;
-};
+}
 
 // just for semantics
 type DistanceInGridUnits = number; // eg 1 for 5ft on a 5ft grid
@@ -51,32 +49,52 @@ function gridMultipliedToUnits(
 }
 
 export default class DragState {
-    private constructor(
-        private readonly start: Vector2,
-        /**
-         * Distance the target has traveled before the current drag.
-         */
-        private readonly baseDistance: DistanceInGridUnits,
-        private readonly distanceScaling: number,
-        private readonly interaction: AbstractInteraction<Item[]>,
-        private readonly sweepData: SweepData[],
-        private readonly snapper: Snapper,
-        /**
-         * Whether the target was created just for this drag (e.g it's a marker for a measurement).
-         */
-        private readonly targetIsNew: boolean,
-        private readonly movementSpeed: DistanceInGridUnits | null,
-        private readonly dpi: number,
-    ) {}
+    readonly #start: Vector2;
+    /**
+     * Distance the target has traveled before the current drag.
+     */
+    readonly #baseDistance: DistanceInGridUnits;
+    readonly #distanceScaling: number;
+    readonly #interaction: AbstractInteraction<Item[]>;
+    readonly #sweepData: SweepData[];
+    readonly #snapper: Snapper;
+    /**
+     * Whether the target was created just for this drag (e.g it's a marker for a measurement).
+     */
+    readonly #targetIsNew: boolean;
+    readonly #movementSpeed: DistanceInGridUnits | null;
+    readonly #dpi: number;
 
-    private static setupOrCreateTarget(
+    private constructor(
+        start: Vector2,
+        baseDistance: DistanceInGridUnits,
+        distanceScaling: number,
+        interaction: AbstractInteraction<Item[]>,
+        sweepData: SweepData[],
+        snapper: Snapper,
+        targetIsNew: boolean,
+        movementSpeed: DistanceInGridUnits | null,
+        dpi: number,
+    ) {
+        this.#start = start;
+        this.#baseDistance = baseDistance;
+        this.#distanceScaling = distanceScaling;
+        this.#interaction = interaction;
+        this.#sweepData = sweepData;
+        this.#snapper = snapper;
+        this.#targetIsNew = targetIsNew;
+        this.#movementSpeed = movementSpeed;
+        this.#dpi = dpi;
+    }
+
+    static setupOrCreateTarget = (
         targetArg: Item | null,
         positionForNew: Vector2,
         dpi: number,
         gridType: GridType,
         playerColor: string,
         privateMode: boolean,
-    ): { target: SequenceTarget; targetIsNew: boolean } {
+    ): { target: SequenceTarget; targetIsNew: boolean } => {
         let target: SequenceTarget;
         const targetIsNew = targetArg === null;
         if (targetArg === null) {
@@ -95,7 +113,7 @@ export default class DragState {
             target = assertHasMetadata(targetArg);
         }
         return { target, targetIsNew };
-    }
+    };
 
     /**
      * Create a new drag state and create all necessary items.
@@ -105,13 +123,13 @@ export default class DragState {
      * @param aboveCharacters Whether to place the sequence items above characters in the Z order.
      * @returns New drag state.
      */
-    static async createDrag(
+    static createDrag = async (
         targetArg: Item | null,
         pointerPosition: Vector2,
         distanceScaling: number,
         privateMode: boolean,
         aboveCharacters: boolean,
-    ): Promise<DragState> {
+    ): Promise<DragState> => {
         const [measurement, gridType, dpi, gridScale, playerColor] =
             await Promise.all([
                 OBR.scene.grid.getMeasurement(),
@@ -154,8 +172,8 @@ export default class DragState {
             waypoint,
         });
         const interaction: AbstractInteraction<Item[]> = privateMode
-            ? await createLocalInteraction(interactionItems)
-            : await wrapRealInteraction(interactionItems);
+            ? await createLocalInteraction(...interactionItems)
+            : await wrapRealInteraction(...interactionItems);
 
         return new DragState(
             target.position,
@@ -168,18 +186,18 @@ export default class DragState {
             movementSpeed,
             dpi,
         );
-    }
+    };
 
     /**
      * Break down the misc items in an interaction.
      * @param items Misc items
      * @returns object that labels items
      */
-    private decomposeItems(items: Item[]): DragInteractionItems {
+    #decomposeItems(items: Item[]): DragInteractionItems {
         let idx = 0;
         const target: SequenceTarget = assertHasMetadata(items[idx++]);
 
-        const numSweeps = this.sweepData.length;
+        const numSweeps = this.#sweepData.length;
         const sweeps = items.slice(idx, (idx += numSweeps)) as Sweep[];
 
         const segment = items[idx++] as Segment;
@@ -188,38 +206,34 @@ export default class DragState {
         return { target, sweeps, segment, waypointLabel, waypoint };
     }
 
-    private static composeItems({
+    static composeItems = ({
         target,
         sweeps,
         segment,
         waypointLabel,
         waypoint,
-    }: DragInteractionItems): Item[] {
-        // For some reason OBR wants existing items first in the interaction array, then newly created ones.
-        // It doesn't display updates to the existing items if existing items are at the back.
-        return [
-            // existing items
-            target,
-            ...sweeps,
-            // new items
-            segment,
-            waypointLabel,
-            waypoint,
-        ];
-    }
+    }: DragInteractionItems): Item[] => [
+        // existing items
+        target,
+        ...sweeps,
+        // new items
+        segment,
+        waypointLabel,
+        waypoint,
+    ];
 
-    private async getDistanceAndScale(end: Vector2): Promise<{
+    async #getDistanceAndScale(end: Vector2): Promise<{
         unadjustedDistance: DistanceInGridUnits;
         scale: GridScale;
     }> {
         const [unadjustedDistance, scale] = await Promise.all([
-            OBR.scene.grid.getDistance(this.start, end),
+            OBR.scene.grid.getDistance(this.#start, end),
             OBR.scene.grid.getScale(),
         ]);
         return { unadjustedDistance, scale };
     }
 
-    private updateItems(
+    #updateItems(
         changedEnd: boolean,
         end: Vector2,
         didLimit: boolean,
@@ -228,8 +242,8 @@ export default class DragState {
         { target, sweeps, segment, waypointLabel }: DragInteractionItems,
     ) {
         if (changedEnd) {
-            const adjustedDistance = unadjustedDistance * this.distanceScaling;
-            const totalDistance = this.baseDistance + adjustedDistance;
+            const adjustedDistance = unadjustedDistance * this.#distanceScaling;
+            const totalDistance = this.#baseDistance + adjustedDistance;
             waypointLabel.text = {
                 ...waypointLabel.text,
                 plainText: getWaypointLabelText(totalDistance, scale, didLimit),
@@ -240,53 +254,55 @@ export default class DragState {
             segment.measurement = getSegmentText(
                 unadjustedDistance,
                 scale,
-                this.distanceScaling,
+                this.#distanceScaling,
             );
 
             target.position = end;
 
-            const movementVector = Math2.subtract(end, this.start);
+            const movementVector = Math2.subtract(end, this.#start);
             for (let i = 0; i < sweeps.length; i++) {
                 const sweep = sweeps[i];
                 const startPosition = Math2.add(
-                    this.start,
-                    this.sweepData[i].baseOffset,
+                    this.#start,
+                    this.#sweepData[i].baseOffset,
                 );
-                const sweepCommands = this.sweepData[i].sweeper(
+                const sweepCommands = this.#sweepData[i].sweeper(
                     startPosition,
                     movementVector,
                 );
                 sweep.commands = [
-                    ...this.sweepData[i].baseCommands,
+                    ...this.#sweepData[i].baseCommands,
                     ...sweepCommands,
                 ];
             }
         }
     }
 
-    private async limit(position: Vector2): Promise<[Vector2, boolean]> {
-        if (this.movementSpeed === null) {
+    async #limit(
+        position: Vector2,
+    ): Promise<[position: Vector2, didLimit: boolean]> {
+        if (this.#movementSpeed === null) {
             return [position, false];
         } else {
             const speedLeft: DistanceInGridUnits =
-                this.movementSpeed - this.baseDistance;
-            const movementVector = Math2.subtract(position, this.start);
+                this.#movementSpeed - this.#baseDistance;
+            const movementVector = Math2.subtract(position, this.#start);
             const movementVectorLength: DistanceInGridUnits =
-                (await OBR.scene.grid.getDistance(this.start, position)) *
-                this.distanceScaling;
+                (await OBR.scene.grid.getDistance(this.#start, position)) *
+                this.#distanceScaling;
 
             if (
                 movementVectorLength > speedLeft &&
-                this.distanceScaling !== 0
+                this.#distanceScaling !== 0
             ) {
                 const movementVectorNormalized =
                     Math2.normalize(movementVector);
                 const limitedMovementVector = Math2.multiply(
                     movementVectorNormalized,
-                    (speedLeft / this.distanceScaling) * this.dpi,
+                    (speedLeft / this.#distanceScaling) * this.#dpi,
                 );
 
-                return [Math2.add(this.start, limitedMovementVector), true];
+                return [Math2.add(this.#start, limitedMovementVector), true];
             } else {
                 return [position, false];
             }
@@ -294,24 +310,24 @@ export default class DragState {
     }
 
     async update(pointerPosition: Vector2) {
-        const [limitedEnd, didLimit] = await this.limit(pointerPosition);
-        const [end, changedEnd] = await this.snapper.snap(limitedEnd);
-        const { unadjustedDistance, scale } = await this.getDistanceAndScale(
+        const [limitedEnd, didLimit] = await this.#limit(pointerPosition);
+        const [end, changedEnd] = await this.#snapper.snap(limitedEnd);
+        const { unadjustedDistance, scale } = await this.#getDistanceAndScale(
             end,
         );
-        const { update } = this.interaction;
+        const { update } = this.#interaction;
         const items = await update((items) => {
-            this.updateItems(
+            this.#updateItems(
                 changedEnd,
                 end,
                 didLimit,
                 unadjustedDistance,
                 scale,
-                this.decomposeItems(items),
+                this.#decomposeItems(items),
             );
         });
 
-        return { ...this.decomposeItems(items), end };
+        return { ...this.#decomposeItems(items), end };
     }
 
     async finish(pointerPosition?: Vector2): Promise<Item> {
@@ -319,15 +335,17 @@ export default class DragState {
             pointerPosition !== undefined
                 ? await this.update(pointerPosition)
                 : {
-                      ...this.decomposeItems(
-                          await this.interaction.update(() => {}),
+                      ...this.#decomposeItems(
+                          await this.#interaction.update(() => {
+                              /*TODO changeme*/
+                          }),
                       ),
                   };
 
-        const { keepAndStop, itemApi } = this.interaction;
+        const { keepAndStop, itemApi } = this.#interaction;
 
         const toAdd: Item[] = [segment, waypointLabel, ...sweeps, waypoint];
-        if (this.targetIsNew) {
+        if (this.#targetIsNew) {
             toAdd.push(target);
         } else {
             // Network item values snap back by default when an interaction is stopped,
@@ -353,7 +371,7 @@ export default class DragState {
             collidedTarget.position,
             VECTOR2_COMPARE_EPSILON,
         );
-        const { unadjustedDistance, scale } = await this.getDistanceAndScale(
+        const { unadjustedDistance, scale } = await this.#getDistanceAndScale(
             collidedTarget.position,
         );
         await itemApi.updateItems(
@@ -365,8 +383,8 @@ export default class DragState {
                 waypoint,
             }),
             (items) => {
-                const dragInteractionItems = this.decomposeItems(items);
-                this.updateItems(
+                const dragInteractionItems = this.#decomposeItems(items);
+                this.#updateItems(
                     changedEnd,
                     collidedTarget.position,
                     false, // collision can only make the path shorter
@@ -385,7 +403,7 @@ export default class DragState {
     }
 
     async cancel() {
-        const { keepAndStop } = this.interaction;
+        const { keepAndStop } = this.#interaction;
         await keepAndStop([]);
     }
 }

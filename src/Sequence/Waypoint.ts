@@ -1,11 +1,13 @@
-import { GridType, Item, Layer, Shape, buildShape } from "@owlbear-rodeo/sdk";
+import type { GridType, Item, Layer, Shape} from "@owlbear-rodeo/sdk";
+import { buildShape } from "@owlbear-rodeo/sdk";
 import { getScale } from "../axonometricUtils";
 import {
     MARKER_STROKE_WIDTH_DPI_SCALING,
     THIN_RULER_COLOR,
     ZIndex,
 } from "../constants";
-import { SequenceItem, buildSequenceItem } from "./SequenceItem";
+import type { SequenceItem} from "./SequenceItem";
+import { buildSequenceItem } from "./SequenceItem";
 
 export type Waypoint = Shape & SequenceItem;
 

@@ -1,7 +1,7 @@
 import OBR from "@owlbear-rodeo/sdk";
 import walk from "../assets/walk.svg";
 import { EDIT_MOVEMENT_ID, METADATA_KEY, TRACK_MOVEMENT_ID } from "./constants";
-import { DraggableItem } from "./Sequence/ItemMetadata";
+import type { DraggableItem } from "./Sequence/ItemMetadata";
 
 export async function createContextMenu() {
     await OBR.contextMenu.create({
@@ -30,8 +30,7 @@ export async function createContextMenu() {
                 },
             },
         ],
-        async onClick(context) {
-            return await OBR.scene.items.updateItems(context.items, (items) =>
+        onClick: async (context) => await OBR.scene.items.updateItems(context.items, (items) =>
                 items.forEach((item) => {
                     const draggableItem = item as DraggableItem;
                     draggableItem.metadata[METADATA_KEY] = {
@@ -39,8 +38,7 @@ export async function createContextMenu() {
                         movementSpeed: 30,
                     };
                 }),
-            );
-        },
+            ),
     });
 
     await OBR.contextMenu.create({

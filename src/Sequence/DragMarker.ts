@@ -1,9 +1,10 @@
-import {
+import type {
     GridType,
     Item,
     KeyFilter,
     Shape,
-    Vector2,
+    Vector2} from "@owlbear-rodeo/sdk";
+import {
     buildShape,
     isShape,
 } from "@owlbear-rodeo/sdk";
@@ -14,8 +15,9 @@ import {
     THIN_RULER_COLOR,
     ZIndex,
 } from "../constants";
+import type {
+    SequenceTarget} from "./ItemMetadata";
 import {
-    SequenceTarget,
     createDraggingSequenceTargetMetadata,
     isSequenceTarget,
 } from "./ItemMetadata";

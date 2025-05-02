@@ -1,21 +1,18 @@
-import OBR, { buildPath, Item, Math2, Vector2 } from "@owlbear-rodeo/sdk";
-import { isAura, SimpleAura } from "../../integration_emanation/Aura";
+import type { Item, Vector2 } from "@owlbear-rodeo/sdk";
+import OBR, { buildPath, Math2 } from "@owlbear-rodeo/sdk";
 import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "../constants";
-import { ItemApi, withBothItemApis } from "../ItemApi";
+import type { SimpleAura } from "../integration_emanation/Aura";
+import { isAura } from "../integration_emanation/Aura";
+import type { ItemApi } from "../ItemApi";
+import { withBothItemApis } from "../ItemApi";
 import { isDragMarker } from "./DragMarker";
-import {
-    isSequenceTarget,
-    SequenceTarget,
-    SequenceTargetMetadata,
-} from "./ItemMetadata";
-import { ItemWithMetadata } from "./metadataUtils";
+import type { SequenceTarget, SequenceTargetMetadata } from "./ItemMetadata";
+import { isSequenceTarget } from "./ItemMetadata";
+import type { ItemWithMetadata } from "./metadataUtils";
 import { isSegment } from "./Segment";
-import {
-    buildSequenceItem,
-    isSequenceItem,
-    SequenceItem,
-} from "./SequenceItem";
-import { Sweep } from "./Sweep";
+import type { SequenceItem } from "./SequenceItem";
+import { buildSequenceItem, isSequenceItem } from "./SequenceItem";
+import type { Sweep } from "./Sweep";
 
 export async function getAuras(
     id: string,

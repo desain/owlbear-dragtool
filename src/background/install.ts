@@ -1,7 +1,9 @@
-import OBR, { Item, Player } from "@owlbear-rodeo/sdk";
+import type { Item, Player } from "@owlbear-rodeo/sdk";
+import OBR from "@owlbear-rodeo/sdk";
 import { METADATA_KEY } from "../constants";
 import { createContextMenu } from "../createContextMenu";
-import { ItemApi, withBothItemApis } from "../ItemApi";
+import type { ItemApi} from "../ItemApi";
+import { withBothItemApis } from "../ItemApi";
 import { isSequenceTarget } from "../Sequence/ItemMetadata";
 import { deleteSequence, itemMovedOutsideItsSequence } from "../Sequence/utils";
 import ChangeScalingAction from "../Tool/ChangeScalingAction";

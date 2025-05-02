@@ -1,4 +1,4 @@
-import {
+import type {
     Item,
     ToolContext,
     ToolEvent,
@@ -17,31 +17,31 @@ import BaseDragMode from "./BaseDragMode";
 export default class MeasureMode extends BaseDragMode implements ToolMode {
     public static PUBLIC = false;
     public static PRIVATE = true;
-    private readonly privateMode: boolean;
+    readonly #privateMode: boolean;
 
     constructor(
         readAndClearScalingJustClicked: () => boolean,
         privateMode: boolean,
     ) {
         super(readAndClearScalingJustClicked);
-        this.privateMode = privateMode;
+        this.#privateMode = privateMode;
     }
 
     get id() {
         return `${PLUGIN_ID}/measure-path-mode${
-            this.privateMode ? "-private" : ""
+            this.#privateMode ? "-private" : ""
         }`;
     }
 
     get shortcut() {
-        return this.privateMode ? "P" : "R";
+        return this.#privateMode ? "P" : "R";
     }
 
     get icons() {
         return [
             {
-                icon: this.privateMode ? rulerPrivate : ruler,
-                label: `Measure Path${this.privateMode ? " (Private)" : ""} `,
+                icon: this.#privateMode ? rulerPrivate : ruler,
+                label: `Measure Path${this.#privateMode ? " (Private)" : ""} `,
                 filter: {
                     activeTools: [TOOL_ID],
                 },
@@ -93,17 +93,18 @@ export default class MeasureMode extends BaseDragMode implements ToolMode {
             target,
             startPosition,
             context.metadata.distanceScaling,
-            this.privateMode,
+            this.#privateMode,
             true,
         );
     }
 
-    async onToolDoubleClick(_: ToolContext, event: ToolEvent) {
+    onToolDoubleClick = async (_: ToolContext, event: ToolEvent) => {
+        void this; // class method
         if (isDragMarker(event.target)) {
             return true;
         } else {
             await deleteAllSequencesForCurrentPlayer();
             return false;
         }
-    }
+    };
 }

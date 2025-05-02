@@ -1,4 +1,4 @@
-import { ToolAction, ToolContext } from "@owlbear-rodeo/sdk";
+import type { ToolAction, ToolContext } from "@owlbear-rodeo/sdk";
 import icon0x from "../../assets/0x.svg";
 import icon1x from "../../assets/1x.svg";
 import icon2x from "../../assets/2x.svg";
@@ -10,12 +10,13 @@ import icon7x from "../../assets/7x.svg";
 import icon8x from "../../assets/8x.svg";
 import icon9x from "../../assets/9x.svg";
 import { PLUGIN_ID, TOOL_ID } from "../constants";
-import { DragToolMetadata, setToolMetadata } from "./DragToolMetadata";
+import type { DragToolMetadata } from "./DragToolMetadata";
+import { setToolMetadata } from "./DragToolMetadata";
 
 export default class ChangeScalingAction implements ToolAction {
-    private static DISTANCE_SCALING_KEY: keyof DragToolMetadata =
+    static readonly #DISTANCE_SCALING_KEY: string & keyof DragToolMetadata =
         "distanceScaling";
-    private static ICONS = [
+    static readonly #ICONS = [
         // Font: Acme
         icon0x,
         icon1x,
@@ -28,32 +29,31 @@ export default class ChangeScalingAction implements ToolAction {
         icon8x,
         icon9x,
     ];
-    private static SCALES = [0, 1, 2];
+    static readonly #SCALES = [0, 1, 2];
 
-    private static nextScale(index: number): number {
-        return ChangeScalingAction.SCALES[
-            (index + 1) % ChangeScalingAction.SCALES.length
+    static nextScale = (index: number): number =>
+        ChangeScalingAction.#SCALES[
+            (index + 1) % ChangeScalingAction.#SCALES.length
         ];
-    }
 
-    private justClicked: boolean = false;
+    #justClicked = false;
     readonly getAndClearJustClicked: () => boolean;
 
     constructor() {
         this.getAndClearJustClicked =
-            this.getAndClearJustClickedImpl.bind(this);
+            this.#getAndClearJustClickedImpl.bind(this);
     }
 
     id = `${PLUGIN_ID} /tool-action-change-scaling`;
     shortcut = "X";
-    icons = ChangeScalingAction.ICONS.map((icon, index) => ({
+    icons = ChangeScalingAction.#ICONS.map((icon, index) => ({
         icon,
         label: `Change Scaling to ${ChangeScalingAction.nextScale(index)}x`,
         filter: {
             activeTools: [TOOL_ID],
             metadata: [
                 {
-                    key: ChangeScalingAction.DISTANCE_SCALING_KEY,
+                    key: ChangeScalingAction.#DISTANCE_SCALING_KEY,
                     value: index,
                 },
             ],
@@ -61,8 +61,8 @@ export default class ChangeScalingAction implements ToolAction {
     }));
 
     async onClick(context: ToolContext) {
-        this.justClicked = true;
-        const currentIndex = ChangeScalingAction.SCALES.findIndex(
+        this.#justClicked = true;
+        const currentIndex = ChangeScalingAction.#SCALES.findIndex(
             (scale) => scale === context.metadata.distanceScaling,
         );
         await setToolMetadata({
@@ -70,9 +70,9 @@ export default class ChangeScalingAction implements ToolAction {
         }); // deactivates tool mode, which will check and clear this flag
     }
 
-    private getAndClearJustClickedImpl() {
-        const result = this.justClicked;
-        this.justClicked = false;
+    #getAndClearJustClickedImpl() {
+        const result = this.#justClicked;
+        this.#justClicked = false;
         return result;
     }
 }

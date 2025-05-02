@@ -1,11 +1,11 @@
-import { Item, Layer } from "@owlbear-rodeo/sdk";
-import { GenericItemBuilder } from "@owlbear-rodeo/sdk/lib/builders/GenericItemBuilder";
+import type { Item, Layer } from "@owlbear-rodeo/sdk";
+import type { GenericItemBuilder } from "@owlbear-rodeo/sdk/lib/builders/GenericItemBuilder";
 import { METADATA_KEY } from "../constants";
-import { ItemWithMetadata } from "./metadataUtils";
+import type { ItemWithMetadata } from "./metadataUtils";
 
-export type SequenceItemMetadata = {
+export interface SequenceItemMetadata {
     type: "SEQUENCE_ITEM";
-};
+}
 
 function createSequenceItemMetadata(): SequenceItemMetadata {
     return { type: "SEQUENCE_ITEM" };
@@ -27,7 +27,7 @@ export function isSequenceItem(item: Item): item is SequenceItem {
     );
 }
 
-type Builds<Result extends Item> = { build(): Result };
+interface Builds<Result extends Item> { build(): Result }
 type BuildResult<Builder extends Builds<Item>> = ReturnType<Builder["build"]>;
 
 export function buildSequenceItem<

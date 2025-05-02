@@ -1,4 +1,4 @@
-import { Item, Metadata } from "@owlbear-rodeo/sdk";
+import type { Item, Metadata } from "@owlbear-rodeo/sdk";
 
 /**
  * An item of a specific type with metadata of a specific type.
@@ -8,9 +8,7 @@ export type ItemWithMetadata<
     MetadataKey extends string,
     MetadataType,
 > = ItemType & {
-    metadata: Metadata & {
-        [Property in MetadataKey]: MetadataType;
-    };
+    metadata: Metadata & Record<MetadataKey, MetadataType>;
 };
 
 export function assertHasMetadata<
