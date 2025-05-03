@@ -1,7 +1,7 @@
 {
   "name": "Drag Tool",
   "description": "Track total movement when dragging tokens",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "manifest_version": 1,
   "author": "desain",
   "homepage_url": "https://github.com/desain/owlbear-dragtool",
