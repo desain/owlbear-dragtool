@@ -3,29 +3,20 @@ import type {
     Item,
     Layer,
     Ruler,
-    Vector2} from "@owlbear-rodeo/sdk";
-import {
-    buildRuler,
-    isRuler
+    Vector2,
 } from "@owlbear-rodeo/sdk";
+import { buildRuler, isRuler } from "@owlbear-rodeo/sdk";
+import type { HasParameterizedMetadata } from "owlbear-utils";
 import { METADATA_KEY, ZIndex } from "../constants";
-import type { ItemWithMetadata } from "./metadataUtils";
-import type {
-    SequenceItemMetadata} from "./SequenceItem";
-import {
-    buildSequenceItem,
-    isSequenceItem
-} from "./SequenceItem";
+import type { SequenceItemMetadata } from "./SequenceItem";
+import { buildSequenceItem, isSequenceItem } from "./SequenceItem";
 
 type SegmentMetadata = SequenceItemMetadata & {
     scalingFactor: number;
 };
 
-export type Segment = ItemWithMetadata<
-    Ruler,
-    typeof METADATA_KEY,
-    SegmentMetadata
->;
+export type Segment = Ruler &
+    HasParameterizedMetadata<typeof METADATA_KEY, SegmentMetadata>;
 
 export function isSegment(item: Item): item is Segment {
     return (

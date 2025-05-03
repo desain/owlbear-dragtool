@@ -1,7 +1,7 @@
 import type { Item, Layer } from "@owlbear-rodeo/sdk";
 import type { GenericItemBuilder } from "@owlbear-rodeo/sdk/lib/builders/GenericItemBuilder";
+import type { HasParameterizedMetadata } from "owlbear-utils";
 import { METADATA_KEY } from "../constants";
-import type { ItemWithMetadata } from "./metadataUtils";
 
 export interface SequenceItemMetadata {
     type: "SEQUENCE_ITEM";
@@ -11,11 +11,8 @@ function createSequenceItemMetadata(): SequenceItemMetadata {
     return { type: "SEQUENCE_ITEM" };
 }
 
-export type SequenceItem = ItemWithMetadata<
-    Item,
-    typeof METADATA_KEY,
-    SequenceItemMetadata
->;
+export type SequenceItem = Item &
+    HasParameterizedMetadata<typeof METADATA_KEY, SequenceItemMetadata>;
 
 export function isSequenceItem(item: Item): item is SequenceItem {
     const metadata = item.metadata[METADATA_KEY];
@@ -27,7 +24,9 @@ export function isSequenceItem(item: Item): item is SequenceItem {
     );
 }
 
-interface Builds<Result extends Item> { build(): Result }
+interface Builds<Result extends Item> {
+    build(): Result;
+}
 type BuildResult<Builder extends Builds<Item>> = ReturnType<Builder["build"]>;
 
 export function buildSequenceItem<
@@ -39,7 +38,8 @@ export function buildSequenceItem<
     zIndex: number | null,
     metadata: Omit<MetadataType, keyof SequenceItemMetadata>,
     builder: Builder,
-): ItemWithMetadata<BuildResult<Builder>, typeof METADATA_KEY, MetadataType> {
+): BuildResult<Builder> &
+    HasParameterizedMetadata<typeof METADATA_KEY, MetadataType> {
     const builder2 = builder
         .attachedTo(target.id)
         .visible(target.visible)
@@ -60,11 +60,8 @@ export function buildSequenceItem<
             [METADATA_KEY]: { ...metadata, ...createSequenceItemMetadata() },
         }) as Builder &
         Builds<
-            ItemWithMetadata<
-                BuildResult<Builder>,
-                typeof METADATA_KEY,
-                MetadataType
-            >
+            BuildResult<Builder> &
+                HasParameterizedMetadata<typeof METADATA_KEY, MetadataType>
         >;
     return builder2.build() as BuildResult<typeof builder2>;
 }
