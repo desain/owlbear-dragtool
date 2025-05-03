@@ -1,7 +1,7 @@
 import type { Item } from "@owlbear-rodeo/sdk";
 import OBR from "@owlbear-rodeo/sdk";
-import { METADATA_KEY } from "../constants";
-import type { ItemWithMetadata } from "./metadataUtils";
+import type { HasParameterizedMetadata } from "owlbear-utils";
+import { METADATA_KEY, METADATA_KEY_SPEED } from "../constants";
 
 export interface SequenceTargetMetadata {
     hasSequence: true;
@@ -24,32 +24,18 @@ function isSequenceTargetMetadata(
     );
 }
 
-export type SequenceTarget = ItemWithMetadata<
-    Item,
-    typeof METADATA_KEY,
-    SequenceTargetMetadata
->;
+export type SequenceTarget = Item &
+    HasParameterizedMetadata<typeof METADATA_KEY, SequenceTargetMetadata>;
 
-interface DraggableItemMetadata {
-    movementSpeed?: number;
-}
+export type DraggableItem = Item &
+    HasParameterizedMetadata<typeof METADATA_KEY_SPEED, number | undefined>;
 
-function isDraggableItemMetadata(
-    metadata: unknown,
-): metadata is DraggableItemMetadata {
+export function isDraggableItem(item: Item): item is DraggableItem {
     return (
-        metadata !== null &&
-        typeof metadata === "object" &&
-        (!("movementSpeed" in metadata) ||
-            typeof metadata.movementSpeed === "number")
+        !(METADATA_KEY_SPEED in item.metadata) ||
+        typeof item.metadata[METADATA_KEY_SPEED] === "number"
     );
 }
-
-export type DraggableItem = ItemWithMetadata<
-    Item,
-    typeof METADATA_KEY,
-    DraggableItemMetadata
->;
 
 export function createDraggingSequenceTargetMetadata(): SequenceTargetMetadata {
     return {
@@ -62,12 +48,4 @@ export function createDraggingSequenceTargetMetadata(): SequenceTargetMetadata {
 export function isSequenceTarget(item: Item): item is SequenceTarget {
     const metadata = item.metadata[METADATA_KEY];
     return isSequenceTargetMetadata(metadata);
-}
-
-export function getItemMetadata(item: Item): DraggableItemMetadata | null {
-    const metadata = item.metadata[METADATA_KEY];
-    if (isDraggableItemMetadata(metadata)) {
-        return metadata;
-    }
-    return null;
 }

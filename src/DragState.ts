@@ -1,16 +1,21 @@
 import type { GridScale, GridType, Item, Vector2 } from "@owlbear-rodeo/sdk";
 import OBR, { Math2 } from "@owlbear-rodeo/sdk";
+import { isObject, type GridParsed } from "owlbear-utils";
 import type { AbstractInteraction } from "./AbstractInteraction";
 import {
     createLocalInteraction,
     wrapRealInteraction,
 } from "./AbstractInteraction";
-import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "./constants";
+import {
+    METADATA_KEY,
+    METADATA_KEY_SPEED,
+    VECTOR2_COMPARE_EPSILON,
+} from "./constants";
 import { createDragMarker } from "./sequence/DragMarker";
 import type { SequenceTarget } from "./sequence/ItemMetadata";
 import {
     createDraggingSequenceTargetMetadata,
-    getItemMetadata,
+    isDraggableItem,
 } from "./sequence/ItemMetadata";
 import { assertHasMetadata } from "./sequence/metadataUtils";
 import type { Segment } from "./sequence/Segment";
@@ -26,6 +31,7 @@ import {
     getWaypointLabelText,
 } from "./sequence/WaypointLabel";
 import Snapper from "./Snapper";
+import { usePlayerStorage } from "./state/usePlayerStorage";
 
 interface DragInteractionItems {
     target: SequenceTarget;
@@ -41,11 +47,9 @@ type DistanceInGridMultiplied = number; // eg 5 for 5ft on a 5ft grid
 
 function gridMultipliedToUnits(
     gridMultiplied: DistanceInGridMultiplied | null,
-    scale: GridScale,
+    scale: GridParsed["parsedScale"],
 ): DistanceInGridUnits | null {
-    return gridMultiplied === null
-        ? null
-        : gridMultiplied / scale.parsed.multiplier;
+    return gridMultiplied === null ? null : gridMultiplied / scale.multiplier;
 }
 
 export default class DragState {
@@ -106,8 +110,9 @@ export default class DragState {
                 privateMode,
             );
         } else {
+            const oldMetadata = targetArg.metadata[METADATA_KEY];
             targetArg.metadata[METADATA_KEY] = {
-                ...getItemMetadata(targetArg),
+                ...(isObject(oldMetadata) ? oldMetadata : {}),
                 ...createDraggingSequenceTargetMetadata(),
             };
             target = assertHasMetadata(targetArg);
@@ -130,14 +135,10 @@ export default class DragState {
         privateMode: boolean,
         aboveCharacters: boolean,
     ): Promise<DragState> => {
-        const [measurement, gridType, dpi, gridScale, playerColor] =
-            await Promise.all([
-                OBR.scene.grid.getMeasurement(),
-                OBR.scene.grid.getType(),
-                OBR.scene.grid.getDpi(),
-                OBR.scene.grid.getScale(),
-                OBR.player.getColor(),
-            ]);
+        const {
+            grid: { measurement, type: gridType, dpi, parsedScale: gridScale },
+            playerColor,
+        } = usePlayerStorage.getState();
 
         const snapper = new Snapper(targetArg, measurement, gridType);
         const layer = aboveCharacters ? "RULER" : "DRAWING";
@@ -151,7 +152,9 @@ export default class DragState {
             privateMode,
         );
         const movementSpeed = gridMultipliedToUnits(
-            getItemMetadata(target)?.movementSpeed ?? null,
+            isDraggableItem(target)
+                ? target.metadata[METADATA_KEY_SPEED] ?? null
+                : null,
             gridScale,
         );
         const { sweeps, sweepDatas: sweepData } = await getSweeps(target);
