@@ -54,7 +54,8 @@ function installContextMenu() {
             onClick: async (context) =>
                 await OBR.scene.items.updateItems(context.items, (items) =>
                     items.forEach((item) => {
-                        item.metadata[METADATA_KEY_SPEED] = 30;
+                        item.metadata[METADATA_KEY_SPEED] =
+                            usePlayerStorage.getState().defaultSpeed;
                     }),
                 ),
         }),

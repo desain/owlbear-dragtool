@@ -54,6 +54,7 @@ export const ContextMenu: React.FC = () => {
         >
             <SpeedInput
                 value={speed}
+                sx={{ maxWidth: 120 }}
                 onChange={(newSpeed) =>
                     void OBR.scene.items.updateItems(selectedItems, (items) =>
                         items.forEach((item) => {

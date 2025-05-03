@@ -6,6 +6,8 @@ import {
     Switch,
     Typography,
 } from "@mui/material";
+import { Control } from "owlbear-utils";
+import { SpeedInput } from "../contextmenu/SpeedInput";
 import { usePlayerStorage } from "../state/usePlayerStorage";
 
 export function Settings() {
@@ -15,9 +17,11 @@ export function Settings() {
     const setContextMenuEnabled = usePlayerStorage(
         (store) => store.setContextMenuEnabled,
     );
+    const defaultSpeed = usePlayerStorage((store) => store.defaultSpeed);
+    const setDefaultSpeed = usePlayerStorage((store) => store.setDefaultSpeed);
 
     return (
-        <Box sx={{ p: 2, minWidth: 300 }}>
+        <Box sx={{ p: 2 }}>
             <Typography variant="h6">Dragtool Settings</Typography>
             <FormGroup sx={{ mb: 2 }}>
                 <FormControlLabel
@@ -36,6 +40,9 @@ export function Settings() {
                     movement speed of tokens.
                 </FormHelperText>
             </FormGroup>
+            <Control label="Default Speed">
+                <SpeedInput value={defaultSpeed} onChange={setDefaultSpeed} />
+            </Control>
         </Box>
     );
 }
