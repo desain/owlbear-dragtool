@@ -28,7 +28,7 @@ importers:
         version: 10.1.1
       owlbear-utils:
         specifier: git+https://github.com/desain/owlbear-utils.git
-        version: git+https://github.com/desain/owlbear-utils.git#4b9b57c1a7d24f34c6be6c27d5bbfbfca2e72792(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))
+        version: git+https://github.com/desain/owlbear-utils.git#37f9ee402caff6ee58a51c44b933636a1e7fd7e4(@types/react@19.1.2)(eslint@9.26.0)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3)
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -57,15 +57,9 @@ importers:
       eslint:
         specifier: ^9.26.0
         version: 9.26.0
-      eslint-plugin-prefer-arrow-functions:
-        specifier: ^3.6.2
-        version: 3.6.2(eslint@9.26.0)(typescript@5.8.3)
-      eslint-plugin-react-hooks:
-        specifier: ^5.2.0
-        version: 5.2.0(eslint@9.26.0)
-      eslint-plugin-react-refresh:
-        specifier: ^0.4.20
-        version: 0.4.20(eslint@9.26.0)
+      eslint-config:
+        specifier: github:desain/eslint-config
+        version: https://codeload.github.com/desain/eslint-config/tar.gz/a8c9db8e924265d6251a83c9d3ca55ae04839998(eslint@9.26.0)(typescript@5.8.3)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -1010,6 +1004,12 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
 
+  eslint-config@https://codeload.github.com/desain/eslint-config/tar.gz/a8c9db8e924265d6251a83c9d3ca55ae04839998:
+    resolution: {tarball: https://codeload.github.com/desain/eslint-config/tar.gz/a8c9db8e924265d6251a83c9d3ca55ae04839998}
+    version: 1.0.0
+    peerDependencies:
+      eslint: '>= 9'
+
   eslint-plugin-prefer-arrow-functions@3.6.2:
     resolution: {integrity: sha512-rSgMW1GFRXacz4FoLV+y56QoDj+pQOtpikaFL2OzEpoDK4umMMG4ONd9W59NLqSjstRqHjefrxco5KRkqxAe9g==}
     engines: {node: '>=18.0.0'}
@@ -1411,8 +1411,8 @@ packages:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
 
-  owlbear-utils@git+https://github.com/desain/owlbear-utils.git#4b9b57c1a7d24f34c6be6c27d5bbfbfca2e72792:
-    resolution: {commit: 4b9b57c1a7d24f34c6be6c27d5bbfbfca2e72792, repo: https://github.com/desain/owlbear-utils.git, type: git}
+  owlbear-utils@git+https://github.com/desain/owlbear-utils.git#37f9ee402caff6ee58a51c44b933636a1e7fd7e4:
+    resolution: {commit: 37f9ee402caff6ee58a51c44b933636a1e7fd7e4, repo: https://github.com/desain/owlbear-utils.git, type: git}
     version: 1.0.0
 
   p-limit@3.1.0:
@@ -2806,6 +2806,18 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
+  eslint-config@https://codeload.github.com/desain/eslint-config/tar.gz/a8c9db8e924265d6251a83c9d3ca55ae04839998(eslint@9.26.0)(typescript@5.8.3):
+    dependencies:
+      eslint: 9.26.0
+      eslint-plugin-prefer-arrow-functions: 3.6.2(eslint@9.26.0)(typescript@5.8.3)
+      eslint-plugin-react-hooks: 5.2.0(eslint@9.26.0)
+      eslint-plugin-react-refresh: 0.4.20(eslint@9.26.0)
+      globals: 16.0.0
+      typescript-eslint: 8.31.1(eslint@9.26.0)(typescript@5.8.3)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   eslint-plugin-prefer-arrow-functions@3.6.2(eslint@9.26.0)(typescript@5.8.3):
     dependencies:
       '@typescript-eslint/types': 8.19.1
@@ -3212,7 +3224,7 @@ snapshots:
       type-check: 0.4.0
       word-wrap: 1.2.5
 
-  owlbear-utils@git+https://github.com/desain/owlbear-utils.git#4b9b57c1a7d24f34c6be6c27d5bbfbfca2e72792(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0)):
+  owlbear-utils@git+https://github.com/desain/owlbear-utils.git#37f9ee402caff6ee58a51c44b933636a1e7fd7e4(@types/react@19.1.2)(eslint@9.26.0)(react-dom@19.1.0(react@19.1.0))(typescript@5.8.3):
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.2)(react@19.1.0)
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.1.2)(react@19.1.0))(@types/react@19.1.2)(react@19.1.0)
@@ -3221,11 +3233,14 @@ snapshots:
       '@owlbear-rodeo/sdk': 3.1.0
       globals: 16.0.0
       react: 19.1.0
+      typescript-eslint: 8.31.1(eslint@9.26.0)(typescript@5.8.3)
     transitivePeerDependencies:
       - '@mui/material-pigment-css'
       - '@types/react'
+      - eslint
       - react-dom
       - supports-color
+      - typescript
 
   p-limit@3.1.0:
     dependencies:
