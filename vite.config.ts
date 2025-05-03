@@ -22,6 +22,10 @@ export default defineConfig({
                     __dirname,
                     "/src/contextmenu/contextMenuEmbed.html",
                 ),
+                popoverSettings: resolve(
+                    __dirname,
+                    "/src/popoverSettings/popoverSettings.html",
+                ),
             },
         },
     },
