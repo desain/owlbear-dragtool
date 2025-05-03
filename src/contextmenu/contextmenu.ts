@@ -3,9 +3,8 @@ import walk from "../../assets/walk.svg";
 import {
     ID_CONTEXTMENU_EDIT,
     ID_CONTEXTMENU_TRACK,
-    METADATA_KEY,
+    METADATA_KEY_SPEED,
 } from "../constants";
-import type { DraggableItem } from "../sequence/ItemMetadata";
 import { usePlayerStorage } from "../state/usePlayerStorage";
 
 export async function startWatchingContextMenuEnabled(): Promise<VoidFunction> {
@@ -45,11 +44,7 @@ function installContextMenu() {
                                 value: "IMAGE",
                             },
                             {
-                                key: [
-                                    "metadata",
-                                    METADATA_KEY,
-                                    "movementSpeed",
-                                ],
+                                key: ["metadata", METADATA_KEY_SPEED],
                                 value: undefined,
                             },
                         ],
@@ -59,11 +54,7 @@ function installContextMenu() {
             onClick: async (context) =>
                 await OBR.scene.items.updateItems(context.items, (items) =>
                     items.forEach((item) => {
-                        const draggableItem = item as DraggableItem;
-                        draggableItem.metadata[METADATA_KEY] = {
-                            ...draggableItem.metadata[METADATA_KEY],
-                            movementSpeed: 30,
-                        };
+                        item.metadata[METADATA_KEY_SPEED] = 30;
                     }),
                 ),
         }),
@@ -77,11 +68,7 @@ function installContextMenu() {
                     filter: {
                         every: [
                             {
-                                key: [
-                                    "metadata",
-                                    METADATA_KEY,
-                                    "movementSpeed",
-                                ],
+                                key: ["metadata", METADATA_KEY_SPEED],
                                 operator: "!=",
                                 value: undefined,
                             },
@@ -91,7 +78,7 @@ function installContextMenu() {
             ],
             embed: {
                 url: "/src/contextmenu/contextMenuEmbed.html",
-                height: 30,
+                height: 50,
             },
         }),
     ]);

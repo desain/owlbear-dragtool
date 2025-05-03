@@ -8,6 +8,7 @@ export const ID_TOOL = `${PLUGIN_ID}/tool`;
 export const ID_TOOL_MODE_DRAG = `${PLUGIN_ID}/toolModeDrag`;
 export const ID_TOOL_ACTION_SETTINGS = `${PLUGIN_ID}/toolActionSettings`;
 export const METADATA_KEY = `${PLUGIN_ID}/metadata`;
+export const METADATA_KEY_SPEED = `${PLUGIN_ID}/movementSpeed`;
 export const ID_CONTEXTMENU_TRACK = `${PLUGIN_ID}/menu-track`;
 export const ID_CONTEXTMENU_EDIT = `${PLUGIN_ID}/menu-edit`;
 
