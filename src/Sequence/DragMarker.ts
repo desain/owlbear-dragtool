@@ -3,11 +3,10 @@ import type {
     Item,
     KeyFilter,
     Shape,
-    Vector2} from "@owlbear-rodeo/sdk";
-import {
-    buildShape,
-    isShape,
+    Vector2,
 } from "@owlbear-rodeo/sdk";
+import { buildShape, isShape } from "@owlbear-rodeo/sdk";
+import { assertItem } from "owlbear-utils";
 import { getScale } from "../axonometricUtils";
 import {
     MARKER_STROKE_WIDTH_DPI_SCALING,
@@ -15,13 +14,11 @@ import {
     THIN_RULER_COLOR,
     ZIndex,
 } from "../constants";
-import type {
-    SequenceTarget} from "./ItemMetadata";
+import type { SequenceTarget } from "./ItemMetadata";
 import {
     createDraggingSequenceTargetMetadata,
     isSequenceTarget,
 } from "./ItemMetadata";
-import { assertHasMetadata } from "./metadataUtils";
 
 type DragMarker = Shape & SequenceTarget;
 
@@ -34,6 +31,7 @@ export function createDragMarker(
 ): DragMarker {
     const diameter = dpi / 2;
     const scale = getScale(gridType);
+    const metadata = createDraggingSequenceTargetMetadata();
     const shape = buildShape()
         .name("Measurement Marker")
         .shapeType("CIRCLE")
@@ -50,9 +48,10 @@ export function createDragMarker(
         .strokeWidth(dpi * MARKER_STROKE_WIDTH_DPI_SCALING)
         .locked(true)
         .layer("CONTROL")
-        .metadata({ [METADATA_KEY]: createDraggingSequenceTargetMetadata() })
+        .metadata({ [METADATA_KEY]: metadata })
         .build();
-    return assertHasMetadata(shape);
+    assertItem(shape, isSequenceTarget);
+    return shape;
 }
 
 export function isDragMarker(target: Item | undefined): target is DragMarker {

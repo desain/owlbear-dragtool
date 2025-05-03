@@ -1,16 +1,9 @@
-import type {
-    Item,
-    Path,
-    PathCommand,
-    Vector2} from "@owlbear-rodeo/sdk";
-import OBR, {
-    isPath,
-    Math2
-} from "@owlbear-rodeo/sdk";
+import type { Item, Path, PathCommand, Vector2 } from "@owlbear-rodeo/sdk";
+import OBR, { isPath, Math2 } from "@owlbear-rodeo/sdk";
+import type { HasParameterizedMetadata } from "owlbear-utils";
 import { METADATA_KEY } from "../constants";
 import type { Sweeper } from "../Sweeper";
 import { getSweeper } from "../Sweeper";
-import type { ItemWithMetadata } from "./metadataUtils";
 import type { SequenceItemMetadata } from "./SequenceItem";
 import { isSequenceItem } from "./SequenceItem";
 import {
@@ -28,7 +21,8 @@ export type SweepMetadata = SequenceItemMetadata & {
 
 const AURA_ID: keyof SweepMetadata = "auraId";
 
-export type Sweep = ItemWithMetadata<Path, typeof METADATA_KEY, SweepMetadata>;
+export type Sweep = Path &
+    HasParameterizedMetadata<typeof METADATA_KEY, SweepMetadata>;
 
 export function isSweep(item: Item): item is Sweep {
     return (

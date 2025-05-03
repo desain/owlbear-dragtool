@@ -1,5 +1,6 @@
 import type { Item, Vector2 } from "@owlbear-rodeo/sdk";
 import OBR, { buildPath, Math2 } from "@owlbear-rodeo/sdk";
+import type { HasParameterizedMetadata } from "owlbear-utils";
 import { METADATA_KEY, VECTOR2_COMPARE_EPSILON } from "../constants";
 import type { SimpleAura } from "../integration_emanation/Aura";
 import { isAura } from "../integration_emanation/Aura";
@@ -8,7 +9,6 @@ import { withBothItemApis } from "../ItemApi";
 import { isDragMarker } from "./DragMarker";
 import type { SequenceTarget, SequenceTargetMetadata } from "./ItemMetadata";
 import { isSequenceTarget } from "./ItemMetadata";
-import type { ItemWithMetadata } from "./metadataUtils";
 import { isSegment } from "./Segment";
 import type { SequenceItem } from "./SequenceItem";
 import { buildSequenceItem, isSequenceItem } from "./SequenceItem";
@@ -51,8 +51,7 @@ export async function deleteSequence(target: SequenceTarget, api: ItemApi) {
     } else {
         await api.updateItems([target], ([target]) => {
             if (isSequenceTarget(target)) {
-                const targetDeletable = target as ItemWithMetadata<
-                    Item,
+                const targetDeletable = target as HasParameterizedMetadata<
                     typeof METADATA_KEY,
                     Partial<SequenceTargetMetadata>
                 >;

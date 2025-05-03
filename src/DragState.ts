@@ -1,6 +1,6 @@
 import type { GridScale, GridType, Item, Vector2 } from "@owlbear-rodeo/sdk";
 import OBR, { Math2 } from "@owlbear-rodeo/sdk";
-import { isObject, type GridParsed } from "owlbear-utils";
+import { assertItem, isObject, type GridParsed } from "owlbear-utils";
 import type { AbstractInteraction } from "./AbstractInteraction";
 import {
     createLocalInteraction,
@@ -16,8 +16,8 @@ import type { SequenceTarget } from "./sequence/ItemMetadata";
 import {
     createDraggingSequenceTargetMetadata,
     isDraggableItem,
+    isSequenceTarget,
 } from "./sequence/ItemMetadata";
-import { assertHasMetadata } from "./sequence/metadataUtils";
 import type { Segment } from "./sequence/Segment";
 import { createSegment, getSegmentText } from "./sequence/Segment";
 import type { Sweep, SweepData } from "./sequence/Sweep";
@@ -115,7 +115,8 @@ export default class DragState {
                 ...(isObject(oldMetadata) ? oldMetadata : {}),
                 ...createDraggingSequenceTargetMetadata(),
             };
-            target = assertHasMetadata(targetArg);
+            assertItem(targetArg, isSequenceTarget);
+            target = targetArg;
         }
         return { target, targetIsNew };
     };
@@ -198,7 +199,8 @@ export default class DragState {
      */
     #decomposeItems(items: Item[]): DragInteractionItems {
         let idx = 0;
-        const target: SequenceTarget = assertHasMetadata(items[idx++]);
+        const target = items[idx++];
+        assertItem(target, isSequenceTarget);
 
         const numSweeps = this.#sweepData.length;
         const sweeps = items.slice(idx, (idx += numSweeps)) as Sweep[];
