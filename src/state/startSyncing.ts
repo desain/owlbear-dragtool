@@ -1,5 +1,5 @@
 import OBR from "@owlbear-rodeo/sdk";
-import { deferCallAll } from "owlbear-utils";
+import { deferCallAll, startRehydrating } from "owlbear-utils";
 import { usePlayerStorage } from "./usePlayerStorage";
 
 /**
@@ -33,14 +33,7 @@ export function startSyncing(): [
     );
     const unsubscribeGrid = OBR.scene.grid.onChange(store.setGrid);
 
-    function handleStorageEvent(e: StorageEvent) {
-        if (e.key === usePlayerStorage.persist.getOptions().name) {
-            return usePlayerStorage.persist.rehydrate();
-        }
-    }
-    window.addEventListener("storage", handleStorageEvent);
-    const uninstallStorageHandler = () =>
-        window.removeEventListener("storage", handleStorageEvent);
+    const uninstallStorageHandler = startRehydrating(usePlayerStorage);
 
     return [
         Promise.all([
