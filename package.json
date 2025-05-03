@@ -7,7 +7,7 @@
   "license": "GPL-3.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "{ test \"$CF_PAGES\" '!=' 1 || test \"$SKIP_DEPENDENCY_INSTALL\" = 1; } || { echo 'SKIP_DEPENDENCY_INSTALL=1 must be set on Cloudflare Pages'; exit 1; } && tsc --build && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "test": "vitest",
