@@ -1,11 +1,12 @@
 import type { GridScale, GridType, Item, Vector2 } from "@owlbear-rodeo/sdk";
 import OBR, { Math2 } from "@owlbear-rodeo/sdk";
-import { assertItem, isObject, type GridParsed } from "owlbear-utils";
-import type { AbstractInteraction } from "./AbstractInteraction";
+import type { AbstractInteraction, GridParsed } from "owlbear-utils";
 import {
+    assertItem,
     createLocalInteraction,
+    isObject,
     wrapRealInteraction,
-} from "./AbstractInteraction";
+} from "owlbear-utils";
 import {
     METADATA_KEY,
     METADATA_KEY_SPEED,

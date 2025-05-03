@@ -1,17 +1,12 @@
 import type { GridType, Vector2 } from "@owlbear-rodeo/sdk";
+import { ANGLE_DIMETRIC_RADIANS, PI_6 } from "owlbear-utils";
 
-const PI_6 = Math.PI / 6;
-function degToRad(deg: number): number {
-    return deg * (Math.PI / 180);
-}
-
-const ANGLE_DIMETRIC = 26.5;
 const SCALE_ISOMETRIC: Vector2 = {
     x: Math.SQRT1_2 / Math.tan(PI_6),
     y: Math.SQRT1_2,
 };
 const SCALE_DIMETRIC: Vector2 = {
-    x: Math.SQRT1_2 / Math.tan(degToRad(ANGLE_DIMETRIC)),
+    x: Math.SQRT1_2 / Math.tan(ANGLE_DIMETRIC_RADIANS),
     y: Math.SQRT1_2,
 };
 
