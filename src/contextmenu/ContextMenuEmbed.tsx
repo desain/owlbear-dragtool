@@ -21,7 +21,7 @@ export const ContextMenu: React.FC = () => {
                 setSelection(player.selection);
             }
         });
-    }, [setSelection]);
+    });
 
     useEffect(() => {
         if (selection.length > 0) {
