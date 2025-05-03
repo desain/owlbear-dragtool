@@ -1,13 +1,18 @@
+import type { TextFieldProps } from "@mui/material";
 import { InputAdornment, TextField } from "@mui/material";
 import { useState } from "react";
 import { usePlayerStorage } from "../state/usePlayerStorage";
 
-interface SpeedInputProps {
+type SpeedInputProps = Omit<TextFieldProps, "onChange"> & {
     value: number;
     onChange: (speed: number) => void;
-}
+};
 
-export const SpeedInput: React.FC<SpeedInputProps> = ({ value, onChange }) => {
+export const SpeedInput: React.FC<SpeedInputProps> = ({
+    value,
+    onChange,
+    ...props
+}) => {
     const grid = usePlayerStorage((state) => state.grid);
     const [oldValue, setOldValue] = useState(value);
     const [displayValue, setDisplayValue] = useState(value.toString()); // value that's not necessarily valid
@@ -19,9 +24,9 @@ export const SpeedInput: React.FC<SpeedInputProps> = ({ value, onChange }) => {
 
     return (
         <TextField
+            {...props}
             type="number"
             size="small"
-            sx={{ maxWidth: 120 }}
             slotProps={{
                 htmlInput: {
                     min: grid.parsedScale.multiplier,

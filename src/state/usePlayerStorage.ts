@@ -14,16 +14,22 @@ enableMapSet();
 
 interface LocalStorage {
     readonly contextMenuEnabled: boolean;
-    setContextMenuEnabled(this: void, contextMenuEnabled: boolean): void;
+    readonly defaultSpeed: number;
+    readonly setContextMenuEnabled: (
+        this: void,
+        contextMenuEnabled: boolean,
+    ) => void;
+    readonly setDefaultSpeed: (this: void, defaultSpeed: number) => void;
 }
 function partializeLocalStorage({
     contextMenuEnabled,
+    defaultSpeed,
 }: LocalStorage): ExtractNonFunctions<LocalStorage> {
-    return { contextMenuEnabled };
+    return { contextMenuEnabled, defaultSpeed };
 }
 
 interface OwlbearStore {
-    sceneReady: boolean;
+    readonly sceneReady: boolean;
     playerColor: string;
     grid: GridParsed;
     setSceneReady: (this: void, sceneReady: boolean) => void;
@@ -37,8 +43,10 @@ export const usePlayerStorage = create<LocalStorage & OwlbearStore>()(
             immer((set) => ({
                 // local storage
                 contextMenuEnabled: false,
+                defaultSpeed: 30,
                 setContextMenuEnabled: (contextMenuEnabled) =>
                     set({ contextMenuEnabled }),
+                setDefaultSpeed: (defaultSpeed) => set({ defaultSpeed }),
 
                 // owlbear store
                 sceneReady: false,
