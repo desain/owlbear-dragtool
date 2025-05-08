@@ -64,6 +64,7 @@ pnpm build
 -   Faster segment dropping
 -   Path editing?
 -   Configurable shortcuts?
+-   Use axono utils from owlbear-utils
 
 ## License
 
